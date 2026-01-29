@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="650" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">8-Point FFT Accelerator - Block Diagram</text>
+  <text x="450" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#64748b">AI-HDL 2026 Competition - Design Phase 1</text>
+  
+  <!-- TinyQV CPU Box (left side) -->
+  <rect x="30" y="200" width="120" height="200" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="90" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af">TinyQV</text>
+  <text x="90" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af">RISC-V</text>
+  <text x="90" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af">CPU</text>
+  <text x="90" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">address[5:0]</text>
+  <text x="90" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">data_in[31:0]</text>
+  <text x="90" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">data_out[31:0]</text>
+  <text x="90" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">read_n/write_n</text>
+  
+  <!-- Main Peripheral Box -->
+  <rect x="200" y="80" width="480" height="520" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/>
+  <text x="440" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#166534">tqvp_fft8 (Peripheral Wrapper)</text>
+  
+  <!-- Bus Interface -->
+  <rect x="220" y="130" width="140" height="100" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="290" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#92400e">Bus Interface</text>
+  <text x="290" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#a16207">Address Decode</text>
+  <text x="290" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#a16207">Read/Write Logic</text>
+  <text x="290" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#a16207">Data Mux</text>
+  
+  <!-- Input Registers -->
+  <rect x="220" y="250" width="140" height="80" rx="6" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="290" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3730a3">Input Registers</text>
+  <text x="290" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#4f46e5">in_real[0:7]</text>
+  <text x="290" y="312" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#4f46e5">in_imag[0:7]</text>
+  
+  <!-- Control/Status -->
+  <rect x="220" y="350" width="140" height="70" rx="6" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="290" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#9d174d">Control/Status</text>
+  <text x="290" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#db2777">start, busy, done</text>
+  <text x="290" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#db2777">done_flag</text>
+  
+  <!-- FFT Core Box -->
+  <rect x="400" y="130" width="260" height="350" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="530" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#c2410c">fft_8point (FFT Core)</text>
+  
+  <!-- State Machine -->
+  <rect x="420" y="175" width="100" height="50" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="470" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#991b1b">State Machine</text>
+  <text x="470" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">IDLE→S1→S2→S3→DONE</text>
+  
+  <!-- Stage Registers -->
+  <rect x="540" y="175" width="100" height="50" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="590" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">Stage Regs</text>
+  <text x="590" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2563eb">stage_real/imag[0:7]</text>
+  
+  <!-- Butterfly Unit -->
+  <rect x="430" y="250" width="200" height="120" rx="6" fill="#f0abfc" stroke="#a855f7" stroke-width="2"/>
+  <text x="530" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#7e22ce">Butterfly Unit</text>
+  
+  <!-- Inside Butterfly -->
+  <rect x="445" y="290" width="80" height="35" rx="3" fill="#faf5ff" stroke="#9333ea" stroke-width="1"/>
+  <text x="485" y="312" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7e22ce">Complex Mult</text>
+  
+  <rect x="540" y="290" width="75" height="35" rx="3" fill="#faf5ff" stroke="#9333ea" stroke-width="1"/>
+  <text x="577" y="312" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7e22ce">Add/Sub</text>
+  
+  <text x="530" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7e22ce">out_a = a + b×W</text>
+  <text x="530" y="367" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7e22ce">out_b = a - b×W</text>
+  
+  <!-- Twiddle Factors -->
+  <rect x="420" y="390" width="100" height="70" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="470" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#047857">Twiddle ROM</text>
+  <text x="470" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#10b981">W8⁰ = 1.0</text>
+  <text x="470" y="437" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#10b981">W8¹ = 0.707-j0.707</text>
+  <text x="470" y="449" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#10b981">W8² = -j1.0</text>
+  <text x="470" y="461" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#10b981">W8³ = -0.707-j0.707</text>
+  
+  <!-- Output Registers -->
+  <rect x="540" y="390" width="100" height="70" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="590" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">Output Regs</text>
+  <text x="590" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2563eb">out_real[0:7]</text>
+  <text x="590" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2563eb">out_imag[0:7]</text>
+  
+  <!-- Output Data Mux (back to peripheral) -->
+  <rect x="220" y="440" width="140" height="60" rx="6" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="290" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3730a3">Output Mux</text>
+  <text x="290" y="485" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#4f46e5">data_out[31:0]</text>
+  
+  <!-- IO Pins Box -->
+  <rect x="720" y="200" width="150" height="200" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="795" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#b91c1c">I/O Pins</text>
+  <text x="795" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">ui_in[7:0]</text>
+  <text x="795" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">(unused)</text>
+  <line x1="720" y1="300" x2="870" y2="300" stroke="#fca5a5" stroke-width="1"/>
+  <text x="795" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">uo_out[7:0]</text>
+  <text x="795" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#ef4444">[0] = busy</text>
+  <text x="795" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#ef4444">[1] = done_flag</text>
+  <text x="795" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#ef4444">[7:2] = 0</text>
+  
+  <!-- Interrupt output -->
+  <rect x="720" y="420" width="150" height="50" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="795" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#a16207">user_interrupt</text>
+  
+  <!-- Arrows / Connections -->
+  <!-- CPU to Bus Interface -->
+  <line x1="150" y1="280" x2="215" y2="180" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead-blue)"/>
+  <line x1="215" y1="200" x2="150" y2="320" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+  
+  <!-- Bus Interface to Input Regs -->
+  <line x1="290" y1="230" x2="290" y2="245" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Input Regs to FFT Core -->
+  <line x1="360" y1="290" x2="395" y2="290" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Control to FFT Core -->
+  <line x1="360" y1="385" x2="395" y2="310" stroke="#db2777" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  
+  <!-- FFT Core internal arrows -->
+  <line x1="470" y1="225" x2="470" y2="245" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+  <line x1="530" y1="370" x2="530" y2="385" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+  
+  <!-- FFT Output to Output Mux -->
+  <path d="M 540 430 Q 400 430 360 470" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Output Mux back to Bus Interface -->
+  <path d="M 290 440 L 290 235" stroke="#16a34a" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-green)"/>
+  
+  <!-- To IO pins -->
+  <line x1="680" y1="300" x2="715" y2="300" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Interrupt line -->
+  <path d="M 360 400 Q 550 520 715 445" stroke="#ca8a04" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+  
+  <!-- Clock and Reset -->
+  <rect x="30" y="80" width="100" height="60" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="80" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#475569">Global Signals</text>
+  <text x="80" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#64748b">clk (64 MHz)</text>
+  <text x="80" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#64748b">rst_n</text>
+  
+  <line x1="130" y1="110" x2="195" y2="110" stroke="#64748b" stroke-width="1" marker-end="url(#arrowhead)"/>
+  
+  <!-- Legend -->
+  <rect x="30" y="520" width="150" height="110" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="105" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#334155">Legend</text>
+  <line x1="45" y1="555" x2="75" y2="555" stroke="#2563eb" stroke-width="2"/>
+  <text x="85" y="559" font-family="Arial, sans-serif" font-size="9" fill="#334155">Write path</text>
+  <line x1="45" y1="575" x2="75" y2="575" stroke="#16a34a" stroke-width="2"/>
+  <text x="85" y="579" font-family="Arial, sans-serif" font-size="9" fill="#334155">Read path</text>
+  <line x1="45" y1="595" x2="75" y2="595" stroke="#ca8a04" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="85" y="599" font-family="Arial, sans-serif" font-size="9" fill="#334155">Interrupt</text>
+  <line x1="45" y1="615" x2="75" y2="615" stroke="#333" stroke-width="1.5"/>
+  <text x="85" y="619" font-family="Arial, sans-serif" font-size="9" fill="#334155">Internal data</text>
+  
+  <!-- Synthesis Stats Box -->
+  <rect x="720" y="520" width="150" height="110" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="795" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#166534">Synthesis Stats</text>
+  <text x="795" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#15803d">Total Cells: 12,172</text>
+  <text x="795" y="577" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#15803d">Flip-Flops: 854</text>
+  <text x="795" y="594" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#15803d">XOR Gates: 2,561</text>
+  <text x="795" y="611" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#15803d">NAND Gates: 5,709</text>
+</svg>

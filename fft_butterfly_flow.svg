@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 500">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#dc2626"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="850" height="500" fill="#fafafa"/>
+  
+  <!-- Title -->
+  <text x="425" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1e293b">8-Point FFT Butterfly Structure (Radix-2 DIT)</text>
+  
+  <!-- Column Headers -->
+  <text x="80" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6366f1">Input</text>
+  <text x="80" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6366f1">(Bit-Reversed)</text>
+  
+  <text x="250" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#8b5cf6">Stage 1</text>
+  <text x="250" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8b5cf6">W⁰ only</text>
+  
+  <text x="450" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#a855f7">Stage 2</text>
+  <text x="450" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#a855f7">W⁰, W²</text>
+  
+  <text x="650" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#c026d3">Stage 3</text>
+  <text x="650" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#c026d3">W⁰, W¹, W², W³</text>
+  
+  <text x="790" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#16a34a">Output</text>
+  <text x="790" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#16a34a">X[k]</text>
+  
+  <!-- Vertical lines for columns -->
+  <line x1="160" y1="100" x2="160" y2="460" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="350" y1="100" x2="350" y2="460" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="550" y1="100" x2="550" y2="460" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="730" y1="100" x2="730" y2="460" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+  
+  <!-- Input nodes (bit-reversed order: 0,4,2,6,1,5,3,7) -->
+  <circle cx="80" cy="130" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[0]</text>
+  
+  <circle cx="80" cy="180" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[4]</text>
+  
+  <circle cx="80" cy="230" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[2]</text>
+  
+  <circle cx="80" cy="280" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[6]</text>
+  
+  <circle cx="80" cy="330" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[1]</text>
+  
+  <circle cx="80" cy="380" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[5]</text>
+  
+  <circle cx="80" cy="430" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[3]</text>
+  
+  <circle cx="80" cy="480" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="485" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1e40af">x[7]</text>
+  
+  <!-- Stage 1 nodes -->
+  <circle cx="250" cy="130" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="180" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="230" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="280" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="330" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="380" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="430" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <circle cx="250" cy="480" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  
+  <!-- Stage 2 nodes -->
+  <circle cx="450" cy="130" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="180" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="230" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="280" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="330" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="380" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="430" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="450" cy="480" r="12" fill="#fae8ff" stroke="#a855f7" stroke-width="2"/>
+  
+  <!-- Stage 3 nodes -->
+  <circle cx="650" cy="130" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="180" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="230" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="280" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="330" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="380" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="430" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  <circle cx="650" cy="480" r="12" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+  
+  <!-- Output nodes -->
+  <circle cx="790" cy="130" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[0]</text>
+  
+  <circle cx="790" cy="180" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[1]</text>
+  
+  <circle cx="790" cy="230" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[2]</text>
+  
+  <circle cx="790" cy="280" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[3]</text>
+  
+  <circle cx="790" cy="330" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[4]</text>
+  
+  <circle cx="790" cy="380" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[5]</text>
+  
+  <circle cx="790" cy="430" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[6]</text>
+  
+  <circle cx="790" cy="480" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="790" y="485" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#166534">X[7]</text>
+  
+  <!-- Stage 1 butterflies (distance 1) -->
+  <!-- BF 0-1 -->
+  <line x1="98" y1="130" x2="235" y2="130" stroke="#333" stroke-width="1.5"/>
+  <line x1="98" y1="180" x2="235" y2="180" stroke="#333" stroke-width="1.5"/>
+  <line x1="170" y1="130" x2="235" y2="180" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="170" y1="180" x2="235" y2="130" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="190" y="168" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 2-3 -->
+  <line x1="98" y1="230" x2="235" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="98" y1="280" x2="235" y2="280" stroke="#333" stroke-width="1.5"/>
+  <line x1="170" y1="230" x2="235" y2="280" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="170" y1="280" x2="235" y2="230" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="190" y="268" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 4-5 -->
+  <line x1="98" y1="330" x2="235" y2="330" stroke="#333" stroke-width="1.5"/>
+  <line x1="98" y1="380" x2="235" y2="380" stroke="#333" stroke-width="1.5"/>
+  <line x1="170" y1="330" x2="235" y2="380" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="170" y1="380" x2="235" y2="330" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="190" y="368" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 6-7 -->
+  <line x1="98" y1="430" x2="235" y2="430" stroke="#333" stroke-width="1.5"/>
+  <line x1="98" y1="480" x2="235" y2="480" stroke="#333" stroke-width="1.5"/>
+  <line x1="170" y1="430" x2="235" y2="480" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="170" y1="480" x2="235" y2="430" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="190" y="468" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- Stage 2 butterflies (distance 2) -->
+  <!-- BF 0-2 -->
+  <line x1="262" y1="130" x2="435" y2="130" stroke="#333" stroke-width="1.5"/>
+  <line x1="262" y1="230" x2="435" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="350" y1="130" x2="435" y2="230" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="350" y1="230" x2="435" y2="130" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="380" y="195" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 1-3 -->
+  <line x1="262" y1="180" x2="435" y2="180" stroke="#333" stroke-width="1.5"/>
+  <line x1="262" y1="280" x2="435" y2="280" stroke="#333" stroke-width="1.5"/>
+  <line x1="350" y1="180" x2="435" y2="280" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="350" y1="280" x2="435" y2="180" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="380" y="245" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W²</text>
+  
+  <!-- BF 4-6 -->
+  <line x1="262" y1="330" x2="435" y2="330" stroke="#333" stroke-width="1.5"/>
+  <line x1="262" y1="430" x2="435" y2="430" stroke="#333" stroke-width="1.5"/>
+  <line x1="350" y1="330" x2="435" y2="430" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="350" y1="430" x2="435" y2="330" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="380" y="395" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 5-7 -->
+  <line x1="262" y1="380" x2="435" y2="380" stroke="#333" stroke-width="1.5"/>
+  <line x1="262" y1="480" x2="435" y2="480" stroke="#333" stroke-width="1.5"/>
+  <line x1="350" y1="380" x2="435" y2="480" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="350" y1="480" x2="435" y2="380" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="380" y="445" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W²</text>
+  
+  <!-- Stage 3 butterflies (distance 4) -->
+  <!-- BF 0-4 -->
+  <line x1="462" y1="130" x2="635" y2="130" stroke="#333" stroke-width="1.5"/>
+  <line x1="462" y1="330" x2="635" y2="330" stroke="#333" stroke-width="1.5"/>
+  <line x1="550" y1="130" x2="635" y2="330" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="550" y1="330" x2="635" y2="130" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="600" y="245" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W⁰</text>
+  
+  <!-- BF 1-5 -->
+  <line x1="462" y1="180" x2="635" y2="180" stroke="#333" stroke-width="1.5"/>
+  <line x1="462" y1="380" x2="635" y2="380" stroke="#333" stroke-width="1.5"/>
+  <line x1="550" y1="180" x2="635" y2="380" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="550" y1="380" x2="635" y2="180" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="600" y="295" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W¹</text>
+  
+  <!-- BF 2-6 -->
+  <line x1="462" y1="230" x2="635" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="462" y1="430" x2="635" y2="430" stroke="#333" stroke-width="1.5"/>
+  <line x1="550" y1="230" x2="635" y2="430" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="550" y1="430" x2="635" y2="230" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="600" y="345" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W²</text>
+  
+  <!-- BF 3-7 -->
+  <line x1="462" y1="280" x2="635" y2="280" stroke="#333" stroke-width="1.5"/>
+  <line x1="462" y1="480" x2="635" y2="480" stroke="#333" stroke-width="1.5"/>
+  <line x1="550" y1="280" x2="635" y2="480" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="550" y1="480" x2="635" y2="280" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="600" y="395" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">W³</text>
+  
+  <!-- Output lines -->
+  <line x1="662" y1="130" x2="768" y2="130" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="180" x2="768" y2="180" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="230" x2="768" y2="230" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="280" x2="768" y2="280" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="330" x2="768" y2="330" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="380" x2="768" y2="380" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="430" x2="768" y2="430" stroke="#333" stroke-width="1.5"/>
+  <line x1="662" y1="480" x2="768" y2="480" stroke="#333" stroke-width="1.5"/>
+  
+</svg>

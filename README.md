@@ -8,6 +8,27 @@
 
 This project implements an **8-Point FFT (Fast Fourier Transform) Accelerator** as a peripheral for the TinyQV RISC-V core. The design uses a Radix-2 Decimation-in-Time algorithm with fixed-point arithmetic.
 
+## Architecture
+
+### Block Diagram
+
+The FFT accelerator integrates with the TinyQV RISC-V CPU through a memory-mapped peripheral interface:
+
+![FFT Accelerator Block Diagram](fft_block_diagram.svg)
+
+### Butterfly Structure
+
+The 8-point FFT is computed using a 3-stage Radix-2 DIT (Decimation-in-Time) butterfly network:
+
+![FFT Butterfly Flow](fft_butterfly_flow.svg)
+
+**Key Algorithm Details:**
+
+- **Stage 1:** 4 butterflies with W⁰ twiddle factor (distance 1)
+- **Stage 2:** 4 butterflies with W⁰, W² twiddle factors (distance 2)
+- **Stage 3:** 4 butterflies with W⁰, W¹, W², W³ twiddle factors (distance 4)
+- **Bit-reversal:** Input samples are reordered (0,4,2,6,1,5,3,7) for in-place computation
+
 ## Features
 
 - 8-point complex FFT computation
@@ -25,15 +46,16 @@ This project implements an **8-Point FFT (Fast Fourier Transform) Accelerator** 
 | Target | Sky130 (TinyTapeout) |
 
 ## File Structure
-```
+
+```text
 ├── src/
-│   ├── fft_8point.v      # FFT computation core
+│   ├── fft_8point.v       # FFT computation core
 │   ├── peripheral.v       # TinyQV bus interface wrapper
 │   └── fft_8point_tb.v    # Testbench
 ├── docs/
-│   ├── info.md            # Detailed documentation
-│   ├── fft_block_diagram.svg
-│   └── fft_butterfly_flow.svg
+│   └── info.md            # Detailed documentation
+├── fft_block_diagram.svg  # Architecture block diagram
+├── fft_butterfly_flow.svg # Butterfly structure diagram
 ├── synthesis_report.txt   # Yosys synthesis output
 └── README.md
 ```
@@ -41,6 +63,7 @@ This project implements an **8-Point FFT (Fast Fourier Transform) Accelerator** 
 ## Verification
 
 All testbench tests pass:
+
 - ✅ DC Signal test
 - ✅ Impulse test  
 - ✅ Nyquist frequency test
