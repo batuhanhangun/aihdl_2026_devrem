@@ -1,0 +1,74 @@
+# ========================================
+# AI-HDL 2026 - .gitignore
+# ========================================
+
+# === Simulation Outputs ===
+*.vcd                  # Waveform dump files
+*.lxt                  # LXT waveform files
+*.fst                  # FST waveform files
+*.vvp                  # Icarus Verilog intermediate
+
+# === Compiled/Built Files ===
+*.out
+*.exe
+*.o
+*.a
+fft_test               # Compiled testbench binary
+a.out
+
+# === Synthesis Outputs (keep synthesis_report.txt) ===
+synth_output.v         # Synthesized netlist (large file)
+*.blif
+*.json                 # Gate-level JSON (from Yosys)
+!src/config.json       # Keep TinyTapeout config
+
+# === OpenLane/OpenROAD Outputs ===
+runs/
+openlane/
+*.def
+*.lef
+*.gds
+*.mag
+*.spice
+
+# === Windows/macOS System Files ===
+*_Zone.Identifier      # Windows download markers
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Editor/IDE Files ===
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-*
+
+# === Python (if using cocotb) ===
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# === Logs ===
+*.log
+!synthesis_report.txt  # Keep synthesis report
+
+# === Temporary Files ===
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# === Large Binary Files ===
+*.pdf                  # PDFs (reference docs should be linked, not committed)
+*.zip
+*.tar.gz
+*.rar
+
+# === Coverage Reports ===
+coverage/
+*.ucdb
+*.vdb
