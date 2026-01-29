@@ -1,0 +1,2475 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.61+21 (git sha1 967b47d98, clang++ 18.1.3 -fPIC -O3)
+
+-- Executing script file `synth.ys' --
+
+1. Executing Verilog-2005 frontend: fft_8point.v
+Parsing Verilog input from `fft_8point.v' to AST representation.
+Generating RTLIL representation for module `\fft_8point'.
+Warning: Replacing memory \stage_imag with list of registers. See fft_8point.v:127
+Warning: Replacing memory \stage_real with list of registers. See fft_8point.v:127
+Generating RTLIL representation for module `\butterfly'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: peripheral.v
+Parsing Verilog input from `peripheral.v' to AST representation.
+Generating RTLIL representation for module `\tqvp_fft8'.
+Warning: Replacing memory \in_imag with list of registers. See peripheral.v:122
+Warning: Replacing memory \in_real with list of registers. See peripheral.v:121
+Successfully finished Verilog frontend.
+
+3. Executing SYNTH pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \tqvp_fft8
+Used module:     \fft_8point
+Used module:         \butterfly
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \tqvp_fft8
+Used module:     \fft_8point
+Used module:         \butterfly
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 8 dead cases from process $proc$peripheral.v:159$93 in module tqvp_fft8.
+Marked 14 switch rules as full_case in process $proc$peripheral.v:159$93 in module tqvp_fft8.
+Marked 6 switch rules as full_case in process $proc$peripheral.v:116$61 in module tqvp_fft8.
+Marked 5 switch rules as full_case in process $proc$fft_8point.v:99$1 in module fft_8point.
+Removed a total of 8 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 38 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\tqvp_fft8.$proc$peripheral.v:116$61'.
+Found async reset \rst_n in `\fft_8point.$proc$fft_8point.v:99$1'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~27 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:105$218'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:104$217'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:104$216'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:103$215'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:103$214'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:102$213'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:102$212'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:101$211'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:101$210'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:100$209'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:100$208'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:99$207'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:99$206'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:98$205'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:98$204'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:95$203'.
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+     1/78: $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202
+     2/78: $7$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$200
+     3/78: $6\data_out[31:0]
+     4/78: $6$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$198
+     5/78: $6$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$197
+     6/78: $6$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$196
+     7/78: $6$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$195
+     8/78: $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191
+     9/78: $6$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$189
+    10/78: $5\data_out[31:0]
+    11/78: $5$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$183
+    12/78: $5$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR[2:0]$182
+    13/78: $5$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$181
+    14/78: $5$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR[2:0]$180
+    15/78: $5$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$187
+    16/78: $5$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$186
+    17/78: $5$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$185
+    18/78: $5$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$184
+    19/78: $4\data_out[31:0]
+    20/78: $4$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$176
+    21/78: $4$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$175
+    22/78: $4$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$174
+    23/78: $4$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$173
+    24/78: $4$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$172
+    25/78: $4$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR[2:0]$171
+    26/78: $4$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$170
+    27/78: $4$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR[2:0]$169
+    28/78: $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167
+    29/78: $4$mem2reg_rd$\in_imag$peripheral.v:172$54_DATA[15:0]$165
+    30/78: $3\data_out[31:0]
+    31/78: $3$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$155
+    32/78: $3$mem2reg_rd$\in_imag$peripheral.v:171$55_ADDR[2:0]$154
+    33/78: $3$mem2reg_rd$\in_imag$peripheral.v:172$54_DATA[15:0]$153
+    34/78: $3$mem2reg_rd$\in_imag$peripheral.v:172$54_ADDR[2:0]$152
+    35/78: $3$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$163
+    36/78: $3$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$162
+    37/78: $3$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$161
+    38/78: $3$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$160
+    39/78: $3$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$159
+    40/78: $3$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR[2:0]$158
+    41/78: $3$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$157
+    42/78: $3$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR[2:0]$156
+    43/78: $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148
+    44/78: $3$mem2reg_rd$\in_real$peripheral.v:166$52_DATA[15:0]$146
+    45/78: $2\data_out[31:0]
+    46/78: $2$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$132
+    47/78: $2$mem2reg_rd$\in_real$peripheral.v:165$53_ADDR[2:0]$131
+    48/78: $2$mem2reg_rd$\in_real$peripheral.v:166$52_DATA[15:0]$130
+    49/78: $2$mem2reg_rd$\in_real$peripheral.v:166$52_ADDR[2:0]$129
+    50/78: $2$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$144
+    51/78: $2$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$143
+    52/78: $2$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$142
+    53/78: $2$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$141
+    54/78: $2$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$140
+    55/78: $2$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR[2:0]$139
+    56/78: $2$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$138
+    57/78: $2$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR[2:0]$137
+    58/78: $2$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$136
+    59/78: $2$mem2reg_rd$\in_imag$peripheral.v:171$55_ADDR[2:0]$135
+    60/78: $2$mem2reg_rd$\in_imag$peripheral.v:172$54_DATA[15:0]$134
+    61/78: $2$mem2reg_rd$\in_imag$peripheral.v:172$54_ADDR[2:0]$133
+    62/78: $1$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$125
+    63/78: $1$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR[2:0]$124
+    64/78: $1$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA[15:0]$123
+    65/78: $1$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR[2:0]$122
+    66/78: $1$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$121
+    67/78: $1$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR[2:0]$120
+    68/78: $1$mem2reg_rd$\out_real$peripheral.v:183$56_DATA[15:0]$119
+    69/78: $1$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR[2:0]$118
+    70/78: $1$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$117
+    71/78: $1$mem2reg_rd$\in_imag$peripheral.v:171$55_ADDR[2:0]$116
+    72/78: $1$mem2reg_rd$\in_imag$peripheral.v:172$54_DATA[15:0]$115
+    73/78: $1$mem2reg_rd$\in_imag$peripheral.v:172$54_ADDR[2:0]$114
+    74/78: $1$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$113
+    75/78: $1$mem2reg_rd$\in_real$peripheral.v:165$53_ADDR[2:0]$112
+    76/78: $1$mem2reg_rd$\in_real$peripheral.v:166$52_DATA[15:0]$111
+    77/78: $1$mem2reg_rd$\in_real$peripheral.v:166$52_ADDR[2:0]$110
+    78/78: $1\data_out[31:0]
+Creating decoders for process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+     1/33: $4$mem2reg_wr$\in_imag$peripheral.v:140$51_ADDR[2:0]$86
+     2/33: $4$mem2reg_wr$\in_imag$peripheral.v:140$51_DATA[15:0]$87
+     3/33: $3$mem2reg_wr$\in_real$peripheral.v:135$50_ADDR[2:0]$78
+     4/33: $3$mem2reg_wr$\in_real$peripheral.v:135$50_DATA[15:0]$79
+     5/33: $3$mem2reg_wr$\in_imag$peripheral.v:140$51_DATA[15:0]$81
+     6/33: $3$mem2reg_wr$\in_imag$peripheral.v:140$51_ADDR[2:0]$80
+     7/33: $2$mem2reg_wr$\in_imag$peripheral.v:140$51_DATA[15:0]$74
+     8/33: $2$mem2reg_wr$\in_imag$peripheral.v:140$51_ADDR[2:0]$73
+     9/33: $2$mem2reg_wr$\in_real$peripheral.v:135$50_DATA[15:0]$72
+    10/33: $2$mem2reg_wr$\in_real$peripheral.v:135$50_ADDR[2:0]$71
+    11/33: $1$mem2reg_wr$\in_imag$peripheral.v:140$51_DATA[15:0]$70
+    12/33: $1$mem2reg_wr$\in_imag$peripheral.v:140$51_ADDR[2:0]$69
+    13/33: $1$mem2reg_wr$\in_real$peripheral.v:135$50_DATA[15:0]$68
+    14/33: $1$mem2reg_wr$\in_real$peripheral.v:135$50_ADDR[2:0]$67
+    15/33: $0\fft_start[0:0]
+    16/33: $1\i[31:0]
+    17/33: $0\in_imag[7][15:0]
+    18/33: $0\in_imag[6][15:0]
+    19/33: $0\in_imag[5][15:0]
+    20/33: $0\in_imag[4][15:0]
+    21/33: $0\in_imag[3][15:0]
+    22/33: $0\in_imag[2][15:0]
+    23/33: $0\in_imag[1][15:0]
+    24/33: $0\in_imag[0][15:0]
+    25/33: $0\in_real[7][15:0]
+    26/33: $0\in_real[6][15:0]
+    27/33: $0\in_real[5][15:0]
+    28/33: $0\in_real[4][15:0]
+    29/33: $0\in_real[3][15:0]
+    30/33: $0\in_real[2][15:0]
+    31/33: $0\in_real[1][15:0]
+    32/33: $0\in_real[0][15:0]
+    33/33: $0\done_flag[0:0]
+Creating decoders for process `\fft_8point.$proc$fft_8point.v:99$1'.
+     1/42: $0\done[0:0]
+     2/42: $0\stage_imag[7][15:0]
+     3/42: $0\stage_imag[6][15:0]
+     4/42: $0\stage_imag[5][15:0]
+     5/42: $0\stage_imag[4][15:0]
+     6/42: $0\stage_imag[3][15:0]
+     7/42: $0\stage_imag[2][15:0]
+     8/42: $0\stage_imag[1][15:0]
+     9/42: $0\stage_imag[0][15:0]
+    10/42: $0\stage_real[7][15:0]
+    11/42: $0\stage_real[6][15:0]
+    12/42: $0\stage_real[5][15:0]
+    13/42: $0\stage_real[4][15:0]
+    14/42: $0\stage_real[3][15:0]
+    15/42: $0\stage_real[2][15:0]
+    16/42: $0\stage_real[1][15:0]
+    17/42: $0\stage_real[0][15:0]
+    18/42: $0\bfly_cnt[2:0]
+    19/42: $0\bfly_w_im[15:0]
+    20/42: $0\bfly_w_re[15:0]
+    21/42: $0\bfly_b_im[15:0]
+    22/42: $0\bfly_b_re[15:0]
+    23/42: $0\bfly_a_im[15:0]
+    24/42: $0\bfly_a_re[15:0]
+    25/42: $0\state[2:0]
+    26/42: $0\out_imag_7[15:0]
+    27/42: $0\out_imag_6[15:0]
+    28/42: $0\out_imag_5[15:0]
+    29/42: $0\out_imag_4[15:0]
+    30/42: $0\out_imag_3[15:0]
+    31/42: $0\out_imag_2[15:0]
+    32/42: $0\out_imag_1[15:0]
+    33/42: $0\out_imag_0[15:0]
+    34/42: $0\out_real_7[15:0]
+    35/42: $0\out_real_6[15:0]
+    36/42: $0\out_real_5[15:0]
+    37/42: $0\out_real_4[15:0]
+    38/42: $0\out_real_3[15:0]
+    39/42: $0\out_real_2[15:0]
+    40/42: $0\out_real_1[15:0]
+    41/42: $0\out_real_0[15:0]
+    42/42: $0\busy[0:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\tqvp_fft8.\out_imag[7]' from process `\tqvp_fft8.$proc$peripheral.v:105$218'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[6]' from process `\tqvp_fft8.$proc$peripheral.v:104$217'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[5]' from process `\tqvp_fft8.$proc$peripheral.v:104$216'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[4]' from process `\tqvp_fft8.$proc$peripheral.v:103$215'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[3]' from process `\tqvp_fft8.$proc$peripheral.v:103$214'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[2]' from process `\tqvp_fft8.$proc$peripheral.v:102$213'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[1]' from process `\tqvp_fft8.$proc$peripheral.v:102$212'.
+No latch inferred for signal `\tqvp_fft8.\out_imag[0]' from process `\tqvp_fft8.$proc$peripheral.v:101$211'.
+No latch inferred for signal `\tqvp_fft8.\out_real[7]' from process `\tqvp_fft8.$proc$peripheral.v:101$210'.
+No latch inferred for signal `\tqvp_fft8.\out_real[6]' from process `\tqvp_fft8.$proc$peripheral.v:100$209'.
+No latch inferred for signal `\tqvp_fft8.\out_real[5]' from process `\tqvp_fft8.$proc$peripheral.v:100$208'.
+No latch inferred for signal `\tqvp_fft8.\out_real[4]' from process `\tqvp_fft8.$proc$peripheral.v:99$207'.
+No latch inferred for signal `\tqvp_fft8.\out_real[3]' from process `\tqvp_fft8.$proc$peripheral.v:99$206'.
+No latch inferred for signal `\tqvp_fft8.\out_real[2]' from process `\tqvp_fft8.$proc$peripheral.v:98$205'.
+No latch inferred for signal `\tqvp_fft8.\out_real[1]' from process `\tqvp_fft8.$proc$peripheral.v:98$204'.
+No latch inferred for signal `\tqvp_fft8.\out_real[0]' from process `\tqvp_fft8.$proc$peripheral.v:95$203'.
+No latch inferred for signal `\tqvp_fft8.\data_out' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_real$peripheral.v:166$52_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_real$peripheral.v:166$52_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_real$peripheral.v:165$53_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_real$peripheral.v:165$53_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_imag$peripheral.v:172$54_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_imag$peripheral.v:172$54_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_imag$peripheral.v:171$55_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_real$peripheral.v:183$56_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_real$peripheral.v:183$56_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_real$peripheral.v:182$57_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_real$peripheral.v:182$57_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_imag$peripheral.v:189$58_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_imag$peripheral.v:189$58_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_imag$peripheral.v:188$59_ADDR' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+No latch inferred for signal `\tqvp_fft8.$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA' from process `\tqvp_fft8.$proc$peripheral.v:159$93'.
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\tqvp_fft8.\i' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1911' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\fft_start' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1916' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\done_flag' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1921' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[0]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1926' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[1]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1931' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[2]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1936' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[3]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1941' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[4]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1946' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[5]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1951' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[6]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1956' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_real[7]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1961' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[0]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1966' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[1]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1971' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[2]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1976' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[3]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1981' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[4]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1986' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[5]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1991' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[6]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$1996' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.\in_imag[7]' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$2001' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.$mem2reg_wr$\in_real$peripheral.v:135$50_ADDR' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$2006' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.$mem2reg_wr$\in_real$peripheral.v:135$50_DATA' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$2011' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.$mem2reg_wr$\in_imag$peripheral.v:140$51_ADDR' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$2016' with positive edge clock and positive level reset.
+Creating register for signal `\tqvp_fft8.$mem2reg_wr$\in_imag$peripheral.v:140$51_DATA' using process `\tqvp_fft8.$proc$peripheral.v:116$61'.
+  created $adff cell `$procdff$2021' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\busy' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2026' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\done' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2031' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_0' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2036' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_1' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2041' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_2' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2046' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_3' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2051' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_4' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2056' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_5' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2061' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_6' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2066' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_real_7' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2071' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_0' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2076' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_1' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2081' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_2' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2086' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_3' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2091' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_4' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2096' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_5' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2101' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_6' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2106' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\out_imag_7' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2111' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\state' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2116' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\bfly_a_re' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2123' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_a_im' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2130' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_b_re' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2137' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_b_im' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2144' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_w_re' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2151' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_w_im' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2158' with positive edge clock.
+Creating register for signal `\fft_8point.\bfly_cnt' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $adff cell `$procdff$2163' with positive edge clock and positive level reset.
+Creating register for signal `\fft_8point.\stage_real[0]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2170' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[1]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2177' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[2]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2184' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[3]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2191' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[4]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2198' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[5]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2205' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[6]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2212' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_real[7]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2219' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[0]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2226' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[1]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2233' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[2]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2240' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[3]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2247' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[4]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2254' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[5]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2261' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[6]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2268' with positive edge clock.
+Creating register for signal `\fft_8point.\stage_imag[7]' using process `\fft_8point.$proc$fft_8point.v:99$1'.
+  created $dff cell `$procdff$2275' with positive edge clock.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `tqvp_fft8.$proc$peripheral.v:105$218'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:104$217'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:104$216'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:103$215'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:103$214'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:102$213'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:102$212'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:101$211'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:101$210'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:100$209'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:100$208'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:99$207'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:99$206'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:98$205'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:98$204'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:95$203'.
+Found and cleaned up 14 empty switches in `\tqvp_fft8.$proc$peripheral.v:159$93'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:159$93'.
+Found and cleaned up 8 empty switches in `\tqvp_fft8.$proc$peripheral.v:116$61'.
+Removing empty process `tqvp_fft8.$proc$peripheral.v:116$61'.
+Found and cleaned up 5 empty switches in `\fft_8point.$proc$fft_8point.v:99$1'.
+Removing empty process `fft_8point.$proc$fft_8point.v:99$1'.
+Cleaned up 27 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tqvp_fft8.
+<suppressed ~56 debug messages>
+Optimizing module butterfly.
+<suppressed ~2 debug messages>
+Optimizing module fft_8point.
+<suppressed ~124 debug messages>
+
+3.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tqvp_fft8.
+<suppressed ~3 debug messages>
+Optimizing module butterfly.
+Optimizing module fft_8point.
+
+3.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tqvp_fft8..
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Removed 270 unused cells and 909 unused wires.
+<suppressed ~277 debug messages>
+
+3.5. Executing CHECK pass (checking for obvious problems).
+Checking module butterfly...
+Checking module fft_8point...
+Checking module tqvp_fft8...
+Found and reported 0 problems.
+
+3.6. Executing OPT pass (performing simple optimizations).
+
+3.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 442 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 208 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~702 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 258 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 234 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 200 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~174 debug messages>
+Removed a total of 292 cells.
+
+3.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$230.
+    dead port 1/2 on $mux $procmux$233.
+    dead port 1/2 on $mux $procmux$236.
+    dead port 1/2 on $mux $procmux$239.
+    dead port 1/2 on $mux $procmux$242.
+    dead port 2/2 on $mux $procmux$244.
+    dead port 2/2 on $mux $procmux$257.
+    dead port 1/2 on $mux $procmux$260.
+    dead port 1/2 on $mux $procmux$263.
+    dead port 1/2 on $mux $procmux$266.
+    dead port 1/2 on $mux $procmux$269.
+    dead port 2/2 on $mux $procmux$271.
+    dead port 1/2 on $mux $procmux$278.
+    dead port 1/2 on $mux $procmux$281.
+    dead port 1/2 on $mux $procmux$284.
+    dead port 1/2 on $mux $procmux$287.
+    dead port 2/2 on $mux $procmux$289.
+    dead port 2/2 on $mux $procmux$374.
+    dead port 1/2 on $mux $procmux$377.
+    dead port 1/2 on $mux $procmux$380.
+    dead port 1/2 on $mux $procmux$383.
+    dead port 2/2 on $mux $procmux$385.
+    dead port 2/2 on $mux $procmux$398.
+    dead port 1/2 on $mux $procmux$401.
+    dead port 1/2 on $mux $procmux$404.
+    dead port 1/2 on $mux $procmux$407.
+    dead port 2/2 on $mux $procmux$409.
+    dead port 1/2 on $mux $procmux$416.
+    dead port 1/2 on $mux $procmux$419.
+    dead port 1/2 on $mux $procmux$422.
+    dead port 2/2 on $mux $procmux$424.
+    dead port 1/2 on $mux $procmux$551.
+    dead port 1/2 on $mux $procmux$554.
+    dead port 2/2 on $mux $procmux$556.
+    dead port 2/2 on $mux $procmux$665.
+    dead port 1/2 on $mux $procmux$668.
+    dead port 2/2 on $mux $procmux$670.
+    dead port 2/2 on $mux $procmux$683.
+    dead port 1/2 on $mux $procmux$686.
+    dead port 2/2 on $mux $procmux$688.
+    dead port 1/2 on $mux $procmux$695.
+    dead port 2/2 on $mux $procmux$697.
+    dead port 2/2 on $mux $procmux$818.
+    dead port 2/2 on $mux $procmux$820.
+    dead port 2/2 on $mux $procmux$833.
+    dead port 2/2 on $mux $procmux$835.
+    dead port 2/2 on $mux $procmux$841.
+Removed 47 multiplexer ports.
+<suppressed ~350 debug messages>
+
+3.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+    New ctrl vector for $pmux cell $procmux$1677: { $procmux$1651_CMP $procmux$1327_CMP $auto$opt_reduce.cc:137:opt_pmux$2277 }
+    New ctrl vector for $pmux cell $procmux$1686: { $auto$opt_reduce.cc:137:opt_pmux$2281 $auto$opt_reduce.cc:137:opt_pmux$2279 }
+    New ctrl vector for $pmux cell $procmux$1694: $auto$opt_reduce.cc:137:opt_pmux$2283
+    New ctrl vector for $pmux cell $procmux$1713: { $auto$opt_reduce.cc:137:opt_pmux$2287 $auto$opt_reduce.cc:137:opt_pmux$2285 }
+    New ctrl vector for $pmux cell $procmux$1721: $auto$opt_reduce.cc:137:opt_pmux$2289
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 5 changes.
+
+3.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 215 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 193 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~66 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 153 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 149 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~12 debug messages>
+Removed a total of 26 cells.
+
+3.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 365 unused wires.
+<suppressed ~2 debug messages>
+
+3.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~299 debug messages>
+
+3.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+    New ctrl vector for $pmux cell $procmux$1288: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2291 }
+    New ctrl vector for $pmux cell $procmux$1307: { $procmux$1300_CMP $procmux$1297_CMP $auto$opt_reduce.cc:137:opt_pmux$2293 }
+    New ctrl vector for $pmux cell $procmux$1350: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2295 $procmux$1289_CMP }
+    New ctrl vector for $pmux cell $procmux$1370: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2297 $procmux$1289_CMP }
+    New ctrl vector for $pmux cell $procmux$1418: { $procmux$1300_CMP $procmux$1297_CMP $auto$opt_reduce.cc:137:opt_pmux$2299 }
+    New ctrl vector for $pmux cell $procmux$1444: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2301 }
+    New ctrl vector for $pmux cell $procmux$1468: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2303 }
+    New ctrl vector for $pmux cell $procmux$1487: { $procmux$1300_CMP $procmux$1297_CMP $auto$opt_reduce.cc:137:opt_pmux$2305 }
+    New ctrl vector for $pmux cell $procmux$1530: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2307 $procmux$1289_CMP }
+    New ctrl vector for $pmux cell $procmux$1550: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2309 $procmux$1289_CMP }
+    New ctrl vector for $pmux cell $procmux$1598: { $procmux$1300_CMP $procmux$1297_CMP $auto$opt_reduce.cc:137:opt_pmux$2311 }
+    New ctrl vector for $pmux cell $procmux$1624: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2313 }
+    New ctrl vector for $pmux cell $procmux$1652: { $procmux$1300_CMP $auto$opt_reduce.cc:137:opt_pmux$2315 }
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 13 changes.
+
+3.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 206 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 196 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~30 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 149 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 10 cells.
+
+3.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+
+3.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~281 debug messages>
+
+3.6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 196 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 149 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+3.7. Executing FSM pass (extract and optimize FSM).
+
+3.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+Found FSM state register fft_8point.bfly_cnt.
+Not marking fft_8point.bfly_w_im as FSM state register:
+    Users of register don't seem to benefit from recoding.
+Not marking fft_8point.bfly_w_re as FSM state register:
+    Users of register don't seem to benefit from recoding.
+Found FSM state register fft_8point.state.
+
+3.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+Extracting FSM `\bfly_cnt' from module `\fft_8point'.
+  found $adff cell for state register: $procdff$2163
+  root of input selection tree: $0\bfly_cnt[2:0]
+  found reset state: 3'000 (from async reset)
+  found ctrl input: $auto$opt_reduce.cc:137:opt_pmux$2291
+  found ctrl input: $procmux$1300_CMP
+  found ctrl input: $procmux$1306_CMP
+  found ctrl input: $procmux$1327_CMP
+  found ctrl input: $procmux$1349_CMP
+  found ctrl input: $procmux$1651_CMP
+  found state code: 3'100
+  found state code: 3'011
+  found state code: 3'010
+  found state code: 3'001
+  found ctrl input: \start
+  found ctrl output: $procmux$1287_CMP
+  found ctrl output: $procmux$1306_CMP
+  found ctrl output: $procmux$1327_CMP
+  found ctrl output: $procmux$1349_CMP
+  found ctrl output: $procmux$1651_CMP
+  ctrl inputs: { $procmux$1300_CMP \start $auto$opt_reduce.cc:137:opt_pmux$2291 }
+  ctrl outputs: { $procmux$1651_CMP $procmux$1349_CMP $procmux$1327_CMP $procmux$1306_CMP $procmux$1287_CMP $0\bfly_cnt[2:0] }
+  transition:      3'000 3'0-0 ->      3'000 8'10000000
+  transition:      3'000 3'10- ->      3'000 8'10000000
+  transition:      3'000 3'11- ->      3'000 8'10000000
+  transition:      3'000 3'--1 ->      3'001 8'10000001
+  transition:      3'100 3'0-0 ->      3'100 8'00001100
+  transition:      3'100 3'10- ->      3'100 8'00001100
+  transition:      3'100 3'11- ->      3'000 8'00001000
+  transition:      3'100 3'--1 ->      3'000 8'00001000
+  transition:      3'010 3'0-0 ->      3'010 8'00100010
+  transition:      3'010 3'10- ->      3'010 8'00100010
+  transition:      3'010 3'11- ->      3'000 8'00100000
+  transition:      3'010 3'--1 ->      3'011 8'00100011
+  transition:      3'001 3'0-0 ->      3'001 8'01000001
+  transition:      3'001 3'10- ->      3'001 8'01000001
+  transition:      3'001 3'11- ->      3'000 8'01000000
+  transition:      3'001 3'--1 ->      3'010 8'01000010
+  transition:      3'011 3'0-0 ->      3'011 8'00010011
+  transition:      3'011 3'10- ->      3'011 8'00010011
+  transition:      3'011 3'11- ->      3'000 8'00010000
+  transition:      3'011 3'--1 ->      3'100 8'00010100
+Extracting FSM `\state' from module `\fft_8point'.
+  found $adff cell for state register: $procdff$2116
+  root of input selection tree: $0\state[2:0]
+  found reset state: 3'000 (from async reset)
+  found ctrl input: $procmux$1289_CMP
+  found ctrl input: $procmux$1293_CMP
+  found ctrl input: $procmux$1297_CMP
+  found ctrl input: $procmux$1300_CMP
+  found ctrl input: $procmux$1287_CMP
+  found state code: 3'100
+  found state code: 3'011
+  found state code: 3'010
+  found ctrl input: \start
+  found state code: 3'001
+  found ctrl output: $procmux$1282_CMP
+  found ctrl output: $procmux$1289_CMP
+  found ctrl output: $procmux$1293_CMP
+  found ctrl output: $procmux$1297_CMP
+  found ctrl output: $procmux$1300_CMP
+  ctrl inputs: { $procmux$1287_CMP \start }
+  ctrl outputs: { $procmux$1300_CMP $procmux$1297_CMP $procmux$1293_CMP $procmux$1289_CMP $procmux$1282_CMP $0\state[2:0] }
+  transition:      3'000 2'-0 ->      3'000 8'10000000
+  transition:      3'000 2'-1 ->      3'001 8'10000001
+  transition:      3'100 2'-- ->      3'000 8'00001000
+  transition:      3'010 2'0- ->      3'010 8'00100010
+  transition:      3'010 2'1- ->      3'011 8'00100011
+  transition:      3'001 2'0- ->      3'001 8'01000001
+  transition:      3'001 2'1- ->      3'010 8'01000010
+  transition:      3'011 2'0- ->      3'011 8'00010011
+  transition:      3'011 2'1- ->      3'100 8'00010100
+
+3.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+Optimizing FSM `$fsm$\state$2323' from module `\fft_8point'.
+Optimizing FSM `$fsm$\bfly_cnt$2316' from module `\fft_8point'.
+  Merging pattern 3'10- and 3'11- from group (0 0 8'10000000).
+  Merging pattern 3'11- and 3'10- from group (0 0 8'10000000).
+
+3.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 20 unused cells and 20 unused wires.
+<suppressed ~21 debug messages>
+
+3.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+Optimizing FSM `$fsm$\bfly_cnt$2316' from module `\fft_8point'.
+  Removing unused output signal $0\bfly_cnt[2:0] [0].
+  Removing unused output signal $0\bfly_cnt[2:0] [1].
+  Removing unused output signal $0\bfly_cnt[2:0] [2].
+Optimizing FSM `$fsm$\state$2323' from module `\fft_8point'.
+  Removing unused output signal $0\state[2:0] [0].
+  Removing unused output signal $0\state[2:0] [1].
+  Removing unused output signal $0\state[2:0] [2].
+
+3.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+Recoding FSM `$fsm$\bfly_cnt$2316' from module `\fft_8point' using `auto' encoding:
+  mapping auto encoding to `one-hot` for this FSM.
+  000 -> ----1
+  100 -> ---1-
+  010 -> --1--
+  001 -> -1---
+  011 -> 1----
+Recoding FSM `$fsm$\state$2323' from module `\fft_8point' using `auto' encoding:
+  mapping auto encoding to `one-hot` for this FSM.
+  000 -> ----1
+  100 -> ---1-
+  010 -> --1--
+  001 -> -1---
+  011 -> 1----
+
+3.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+FSM `$fsm$\bfly_cnt$2316' from module `fft_8point':
+-------------------------------------
+
+  Information on FSM $fsm$\bfly_cnt$2316 (\bfly_cnt):
+
+  Number of input signals:    3
+  Number of output signals:   5
+  Number of state bits:       5
+
+  Input signals:
+    0: $auto$opt_reduce.cc:137:opt_pmux$2291
+    1: \start
+    2: $procmux$1300_CMP
+
+  Output signals:
+    0: $procmux$1287_CMP
+    1: $procmux$1306_CMP
+    2: $procmux$1327_CMP
+    3: $procmux$1349_CMP
+    4: $procmux$1651_CMP
+
+  State encoding:
+    0:    5'----1  <RESET STATE>
+    1:    5'---1-
+    2:    5'--1--
+    3:    5'-1---
+    4:    5'1----
+
+  Transition Table (state_in, ctrl_in, state_out, ctrl_out):
+      0:     0 3'0-0   ->     0 5'10000
+      1:     0 3'1--   ->     0 5'10000
+      2:     0 3'--1   ->     3 5'10000
+      3:     1 3'--1   ->     0 5'00001
+      4:     1 3'11-   ->     0 5'00001
+      5:     1 3'0-0   ->     1 5'00001
+      6:     1 3'10-   ->     1 5'00001
+      7:     2 3'11-   ->     0 5'00100
+      8:     2 3'0-0   ->     2 5'00100
+      9:     2 3'10-   ->     2 5'00100
+     10:     2 3'--1   ->     4 5'00100
+     11:     3 3'11-   ->     0 5'01000
+     12:     3 3'--1   ->     2 5'01000
+     13:     3 3'0-0   ->     3 5'01000
+     14:     3 3'10-   ->     3 5'01000
+     15:     4 3'11-   ->     0 5'00010
+     16:     4 3'--1   ->     1 5'00010
+     17:     4 3'0-0   ->     4 5'00010
+     18:     4 3'10-   ->     4 5'00010
+
+-------------------------------------
+
+FSM `$fsm$\state$2323' from module `fft_8point':
+-------------------------------------
+
+  Information on FSM $fsm$\state$2323 (\state):
+
+  Number of input signals:    2
+  Number of output signals:   5
+  Number of state bits:       5
+
+  Input signals:
+    0: \start
+    1: $procmux$1287_CMP
+
+  Output signals:
+    0: $procmux$1282_CMP
+    1: $procmux$1289_CMP
+    2: $procmux$1293_CMP
+    3: $procmux$1297_CMP
+    4: $procmux$1300_CMP
+
+  State encoding:
+    0:    5'----1  <RESET STATE>
+    1:    5'---1-
+    2:    5'--1--
+    3:    5'-1---
+    4:    5'1----
+
+  Transition Table (state_in, ctrl_in, state_out, ctrl_out):
+      0:     0 2'-0   ->     0 5'10000
+      1:     0 2'-1   ->     3 5'10000
+      2:     1 2'--   ->     0 5'00001
+      3:     2 2'0-   ->     2 5'00100
+      4:     2 2'1-   ->     4 5'00100
+      5:     3 2'1-   ->     2 5'01000
+      6:     3 2'0-   ->     3 5'01000
+      7:     4 2'1-   ->     1 5'00010
+      8:     4 2'0-   ->     4 5'00010
+
+-------------------------------------
+
+3.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+Mapping FSM `$fsm$\bfly_cnt$2316' from module `\fft_8point'.
+Mapping FSM `$fsm$\state$2323' from module `\fft_8point'.
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~19 debug messages>
+Optimizing module tqvp_fft8.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 224 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 215 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~27 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 149 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 9 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~271 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 215 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 149 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$2275 ($dff) from module fft_8point (D = $0\stage_imag[7][15:0], Q = \stage_imag[7]).
+Adding EN signal on $procdff$2268 ($dff) from module fft_8point (D = $0\stage_imag[6][15:0], Q = \stage_imag[6]).
+Adding EN signal on $procdff$2261 ($dff) from module fft_8point (D = $0\stage_imag[5][15:0], Q = \stage_imag[5]).
+Adding EN signal on $procdff$2254 ($dff) from module fft_8point (D = $0\stage_imag[4][15:0], Q = \stage_imag[4]).
+Adding EN signal on $procdff$2247 ($dff) from module fft_8point (D = $0\stage_imag[3][15:0], Q = \stage_imag[3]).
+Adding EN signal on $procdff$2240 ($dff) from module fft_8point (D = $0\stage_imag[2][15:0], Q = \stage_imag[2]).
+Adding EN signal on $procdff$2233 ($dff) from module fft_8point (D = $0\stage_imag[1][15:0], Q = \stage_imag[1]).
+Adding EN signal on $procdff$2226 ($dff) from module fft_8point (D = $0\stage_imag[0][15:0], Q = \stage_imag[0]).
+Adding EN signal on $procdff$2219 ($dff) from module fft_8point (D = $0\stage_real[7][15:0], Q = \stage_real[7]).
+Adding EN signal on $procdff$2212 ($dff) from module fft_8point (D = $0\stage_real[6][15:0], Q = \stage_real[6]).
+Adding EN signal on $procdff$2205 ($dff) from module fft_8point (D = $0\stage_real[5][15:0], Q = \stage_real[5]).
+Adding EN signal on $procdff$2198 ($dff) from module fft_8point (D = $0\stage_real[4][15:0], Q = \stage_real[4]).
+Adding EN signal on $procdff$2191 ($dff) from module fft_8point (D = $0\stage_real[3][15:0], Q = \stage_real[3]).
+Adding EN signal on $procdff$2184 ($dff) from module fft_8point (D = $0\stage_real[2][15:0], Q = \stage_real[2]).
+Adding EN signal on $procdff$2177 ($dff) from module fft_8point (D = $0\stage_real[1][15:0], Q = \stage_real[1]).
+Adding EN signal on $procdff$2170 ($dff) from module fft_8point (D = $0\stage_real[0][15:0], Q = \stage_real[0]).
+Adding EN signal on $procdff$2158 ($dff) from module fft_8point (D = $0\bfly_w_im[15:0], Q = \bfly_w_im).
+Adding EN signal on $procdff$2151 ($dff) from module fft_8point (D = $0\bfly_w_re[15:0], Q = \bfly_w_re).
+Adding EN signal on $procdff$2144 ($dff) from module fft_8point (D = $0\bfly_b_im[15:0], Q = \bfly_b_im).
+Adding EN signal on $procdff$2137 ($dff) from module fft_8point (D = $0\bfly_b_re[15:0], Q = \bfly_b_re).
+Adding EN signal on $procdff$2130 ($dff) from module fft_8point (D = $0\bfly_a_im[15:0], Q = \bfly_a_im).
+Adding EN signal on $procdff$2123 ($dff) from module fft_8point (D = $0\bfly_a_re[15:0], Q = \bfly_a_re).
+Adding EN signal on $procdff$2111 ($adff) from module fft_8point (D = \stage_imag[7], Q = \out_imag_7).
+Adding EN signal on $procdff$2106 ($adff) from module fft_8point (D = \stage_imag[6], Q = \out_imag_6).
+Adding EN signal on $procdff$2101 ($adff) from module fft_8point (D = \stage_imag[5], Q = \out_imag_5).
+Adding EN signal on $procdff$2096 ($adff) from module fft_8point (D = \stage_imag[4], Q = \out_imag_4).
+Adding EN signal on $procdff$2091 ($adff) from module fft_8point (D = \stage_imag[3], Q = \out_imag_3).
+Adding EN signal on $procdff$2086 ($adff) from module fft_8point (D = \stage_imag[2], Q = \out_imag_2).
+Adding EN signal on $procdff$2081 ($adff) from module fft_8point (D = \stage_imag[1], Q = \out_imag_1).
+Adding EN signal on $procdff$2076 ($adff) from module fft_8point (D = \stage_imag[0], Q = \out_imag_0).
+Adding EN signal on $procdff$2071 ($adff) from module fft_8point (D = \stage_real[7], Q = \out_real_7).
+Adding EN signal on $procdff$2066 ($adff) from module fft_8point (D = \stage_real[6], Q = \out_real_6).
+Adding EN signal on $procdff$2061 ($adff) from module fft_8point (D = \stage_real[5], Q = \out_real_5).
+Adding EN signal on $procdff$2056 ($adff) from module fft_8point (D = \stage_real[4], Q = \out_real_4).
+Adding EN signal on $procdff$2051 ($adff) from module fft_8point (D = \stage_real[3], Q = \out_real_3).
+Adding EN signal on $procdff$2046 ($adff) from module fft_8point (D = \stage_real[2], Q = \out_real_2).
+Adding EN signal on $procdff$2041 ($adff) from module fft_8point (D = \stage_real[1], Q = \out_real_1).
+Adding EN signal on $procdff$2036 ($adff) from module fft_8point (D = \stage_real[0], Q = \out_real_0).
+Adding EN signal on $procdff$2026 ($adff) from module fft_8point (D = $0\busy[0:0], Q = \busy).
+Adding EN signal on $procdff$2001 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[7]).
+Adding EN signal on $procdff$1996 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[6]).
+Adding EN signal on $procdff$1991 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[5]).
+Adding EN signal on $procdff$1986 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[4]).
+Adding EN signal on $procdff$1981 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[3]).
+Adding EN signal on $procdff$1976 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[2]).
+Adding EN signal on $procdff$1971 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[1]).
+Adding EN signal on $procdff$1966 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_imag[0]).
+Adding EN signal on $procdff$1961 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[7]).
+Adding EN signal on $procdff$1956 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[6]).
+Adding EN signal on $procdff$1951 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[5]).
+Adding EN signal on $procdff$1946 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[4]).
+Adding EN signal on $procdff$1941 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[3]).
+Adding EN signal on $procdff$1936 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[2]).
+Adding EN signal on $procdff$1931 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[1]).
+Adding EN signal on $procdff$1926 ($adff) from module tqvp_fft8 (D = \data_in [15:0], Q = \in_real[0]).
+
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 94 unused cells and 129 unused wires.
+<suppressed ~96 debug messages>
+
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~23 debug messages>
+Optimizing module tqvp_fft8.
+
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~145 debug messages>
+
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 290 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 213 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~264 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 117 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 110 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~21 debug messages>
+Removed a total of 95 cells.
+
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 95 unused wires.
+<suppressed ~2 debug messages>
+
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~169 debug messages>
+
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 12 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 110 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 16 bits (of 32) from port B of cell butterfly.$add$fft_8point.v:329$9 ($add).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$add$fft_8point.v:329$9 ($add).
+Removed top 1 bits (of 32) from port A of cell butterfly.$add$fft_8point.v:329$9 ($add).
+Removed top 16 bits (of 32) from port B of cell butterfly.$add$fft_8point.v:330$11 ($add).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$add$fft_8point.v:330$11 ($add).
+Removed top 1 bits (of 32) from port A of cell butterfly.$add$fft_8point.v:330$11 ($add).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$sub$fft_8point.v:325$5 ($sub).
+Removed top 1 bits (of 32) from port A of cell butterfly.$sub$fft_8point.v:325$5 ($sub).
+Removed top 1 bits (of 32) from port B of cell butterfly.$sub$fft_8point.v:325$5 ($sub).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$add$fft_8point.v:326$8 ($add).
+Removed top 1 bits (of 32) from port A of cell butterfly.$add$fft_8point.v:326$8 ($add).
+Removed top 1 bits (of 32) from port B of cell butterfly.$add$fft_8point.v:326$8 ($add).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$mul$fft_8point.v:325$3 ($mul).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$mul$fft_8point.v:325$4 ($mul).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$mul$fft_8point.v:326$6 ($mul).
+Removed top 1 bits (of 32) from port Y of cell butterfly.$mul$fft_8point.v:326$7 ($mul).
+Removed top 1 bits (of 32) from wire butterfly.$add$fft_8point.v:329$9_Y.
+Removed top 1 bits (of 32) from wire butterfly.$add$fft_8point.v:330$11_Y.
+Removed top 1 bits (of 32) from wire butterfly.$mul$fft_8point.v:325$3_Y.
+Removed top 1 bits (of 32) from wire butterfly.$mul$fft_8point.v:325$4_Y.
+Removed top 1 bits (of 32) from wire butterfly.$mul$fft_8point.v:326$6_Y.
+Removed top 12 bits (of 32) from wire butterfly.$mul$fft_8point.v:326$7_Y.
+Removed top 12 bits (of 32) from wire butterfly.bw_im_full.
+Removed top 12 bits (of 32) from wire butterfly.bw_re_full.
+Removed top 4 bits (of 5) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2645 ($ne).
+Removed top 4 bits (of 5) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2643 ($ne).
+Removed top 4 bits (of 5) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2636 ($ne).
+Removed top 2 bits (of 4) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2623 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2524 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2517 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2513 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2506 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2504 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2502 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2493 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2489 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2482 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2478 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2471 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2469 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2467 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2458 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2454 ($ne).
+Removed top 1 bits (of 2) from port B of cell fft_8point.$auto$opt_dff.cc:248:make_patterns_logic$2445 ($ne).
+Removed top 5 bits (of 6) from port B of cell tqvp_fft8.$ge$peripheral.v:134$75 ($ge).
+Removed top 28 bits (of 32) from port B of cell tqvp_fft8.$lt$peripheral.v:134$76 ($lt).
+Removed top 2 bits (of 6) from port B of cell tqvp_fft8.$ge$peripheral.v:139$83 ($ge).
+Removed top 27 bits (of 32) from port B of cell tqvp_fft8.$lt$peripheral.v:139$84 ($lt).
+Removed top 2 bits (of 6) from port B of cell tqvp_fft8.$sub$peripheral.v:140$88 ($sub).
+Removed top 3 bits (of 6) from port Y of cell tqvp_fft8.$sub$peripheral.v:140$88 ($sub).
+Removed top 3 bits (of 6) from port A of cell tqvp_fft8.$sub$peripheral.v:140$88 ($sub).
+Removed top 3 bits (of 4) from port B of cell tqvp_fft8.$sub$peripheral.v:140$88 ($sub).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$eq$peripheral.v:144$89 ($eq).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$eq$peripheral.v:176$168 ($eq).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$ge$peripheral.v:181$177 ($ge).
+Removed top 27 bits (of 32) from port B of cell tqvp_fft8.$lt$peripheral.v:181$178 ($lt).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$sub$peripheral.v:182$190 ($sub).
+Removed top 3 bits (of 6) from port Y of cell tqvp_fft8.$sub$peripheral.v:182$190 ($sub).
+Removed top 3 bits (of 6) from port A of cell tqvp_fft8.$sub$peripheral.v:182$190 ($sub).
+Removed top 3 bits (of 5) from port B of cell tqvp_fft8.$sub$peripheral.v:182$190 ($sub).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$ge$peripheral.v:187$192 ($ge).
+Removed top 26 bits (of 32) from port B of cell tqvp_fft8.$lt$peripheral.v:187$193 ($lt).
+Removed top 1 bits (of 6) from port B of cell tqvp_fft8.$sub$peripheral.v:188$201 ($sub).
+Removed top 3 bits (of 6) from port Y of cell tqvp_fft8.$sub$peripheral.v:188$201 ($sub).
+Removed top 3 bits (of 6) from port A of cell tqvp_fft8.$sub$peripheral.v:188$201 ($sub).
+Removed top 3 bits (of 5) from port B of cell tqvp_fft8.$sub$peripheral.v:188$201 ($sub).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$226_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$227_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell tqvp_fft8.$procmux$228_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$370_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$371_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell tqvp_fft8.$procmux$372_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$1114_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$1130_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell tqvp_fft8.$procmux$1147_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$1218_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell tqvp_fft8.$procmux$1231_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell tqvp_fft8.$procmux$1245_CMP0 ($eq).
+Removed top 3 bits (of 6) from wire tqvp_fft8.$sub$peripheral.v:140$88_Y.
+Removed top 3 bits (of 6) from wire tqvp_fft8.$sub$peripheral.v:182$190_Y.
+Removed top 3 bits (of 6) from wire tqvp_fft8.$sub$peripheral.v:188$201_Y.
+
+3.10. Executing PEEPOPT pass (run peephole optimizers).
+
+3.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 9 unused wires.
+<suppressed ~2 debug messages>
+
+3.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module butterfly:
+  creating $macc model for $add$fft_8point.v:326$8 ($add).
+  creating $macc model for $add$fft_8point.v:329$9 ($add).
+  creating $macc model for $add$fft_8point.v:330$11 ($add).
+  creating $macc model for $add$fft_8point.v:333$13 ($add).
+  creating $macc model for $add$fft_8point.v:334$14 ($add).
+  creating $macc model for $mul$fft_8point.v:325$3 ($mul).
+  creating $macc model for $mul$fft_8point.v:325$4 ($mul).
+  creating $macc model for $mul$fft_8point.v:326$6 ($mul).
+  creating $macc model for $mul$fft_8point.v:326$7 ($mul).
+  creating $macc model for $sub$fft_8point.v:325$5 ($sub).
+  creating $macc model for $sub$fft_8point.v:335$15 ($sub).
+  creating $macc model for $sub$fft_8point.v:336$16 ($sub).
+  merging $macc model for $mul$fft_8point.v:325$3 into $sub$fft_8point.v:325$5.
+  merging $macc model for $mul$fft_8point.v:325$4 into $sub$fft_8point.v:325$5.
+  merging $macc model for $add$fft_8point.v:326$8 into $add$fft_8point.v:330$11.
+  merging $macc model for $mul$fft_8point.v:326$6 into $add$fft_8point.v:330$11.
+  merging $macc model for $mul$fft_8point.v:326$7 into $add$fft_8point.v:330$11.
+  merging $macc model for $sub$fft_8point.v:325$5 into $add$fft_8point.v:329$9.
+  creating $alu model for $macc $sub$fft_8point.v:336$16.
+  creating $alu model for $macc $add$fft_8point.v:334$14.
+  creating $alu model for $macc $add$fft_8point.v:333$13.
+  creating $alu model for $macc $sub$fft_8point.v:335$15.
+  creating $macc cell for $add$fft_8point.v:329$9: $auto$alumacc.cc:382:replace_macc$2781
+  creating $macc cell for $add$fft_8point.v:330$11: $auto$alumacc.cc:382:replace_macc$2782
+  creating $alu cell for $sub$fft_8point.v:335$15: $auto$alumacc.cc:512:replace_alu$2783
+  creating $alu cell for $add$fft_8point.v:333$13: $auto$alumacc.cc:512:replace_alu$2786
+  creating $alu cell for $add$fft_8point.v:334$14: $auto$alumacc.cc:512:replace_alu$2789
+  creating $alu cell for $sub$fft_8point.v:336$16: $auto$alumacc.cc:512:replace_alu$2792
+  created 4 $alu and 2 $macc cells.
+Extracting $alu and $macc cells in module fft_8point:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module tqvp_fft8:
+  creating $macc model for $sub$peripheral.v:140$88 ($sub).
+  creating $macc model for $sub$peripheral.v:182$190 ($sub).
+  creating $macc model for $sub$peripheral.v:188$201 ($sub).
+  creating $alu model for $macc $sub$peripheral.v:188$201.
+  creating $alu model for $macc $sub$peripheral.v:182$190.
+  creating $alu model for $macc $sub$peripheral.v:140$88.
+  creating $alu model for $ge$peripheral.v:134$75 ($ge): new $alu
+  creating $alu model for $ge$peripheral.v:139$83 ($ge): new $alu
+  creating $alu model for $ge$peripheral.v:181$177 ($ge): new $alu
+  creating $alu model for $ge$peripheral.v:187$192 ($ge): new $alu
+  creating $alu model for $lt$peripheral.v:134$76 ($lt): merged with $ge$peripheral.v:139$83.
+  creating $alu model for $lt$peripheral.v:139$84 ($lt): new $alu
+  creating $alu model for $lt$peripheral.v:181$178 ($lt): merged with $ge$peripheral.v:187$192.
+  creating $alu model for $lt$peripheral.v:187$193 ($lt): new $alu
+  creating $alu model for $eq$peripheral.v:144$89 ($eq): merged with $lt$peripheral.v:139$84.
+  creating $alu model for $procmux$1231_CMP0 ($eq): merged with $sub$peripheral.v:182$190.
+  creating $alu cell for $lt$peripheral.v:187$193: $auto$alumacc.cc:512:replace_alu$2801
+  creating $alu cell for $lt$peripheral.v:139$84, $eq$peripheral.v:144$89: $auto$alumacc.cc:512:replace_alu$2806
+  creating $alu cell for $ge$peripheral.v:187$192, $lt$peripheral.v:181$178: $auto$alumacc.cc:512:replace_alu$2813
+  creating $alu cell for $ge$peripheral.v:181$177: $auto$alumacc.cc:512:replace_alu$2826
+  creating $alu cell for $ge$peripheral.v:139$83, $lt$peripheral.v:134$76: $auto$alumacc.cc:512:replace_alu$2839
+  creating $alu cell for $ge$peripheral.v:134$75: $auto$alumacc.cc:512:replace_alu$2852
+  creating $alu cell for $sub$peripheral.v:140$88: $auto$alumacc.cc:512:replace_alu$2865
+  creating $alu cell for $sub$peripheral.v:182$190, $procmux$1231_CMP0: $auto$alumacc.cc:512:replace_alu$2868
+  creating $alu cell for $sub$peripheral.v:188$201: $auto$alumacc.cc:512:replace_alu$2873
+  created 9 $alu and 0 $macc cells.
+
+3.13. Executing SHARE pass (SAT-based resource sharing).
+Found 4 cells in module butterfly that may be considered for resource sharing.
+  Analyzing resource sharing options for $mul$fft_8point.v:326$7 ($mul):
+    Found cell that is never activated: $add$fft_8point.v:326$8
+    Found cell that is never activated: $mul$fft_8point.v:326$7
+    Cell is never active. Sharing is pointless, we simply remove it.
+  Analyzing resource sharing options for $mul$fft_8point.v:326$6 ($mul):
+    Found cell that is never activated: $mul$fft_8point.v:326$6
+    Cell is never active. Sharing is pointless, we simply remove it.
+  Analyzing resource sharing options for $mul$fft_8point.v:325$4 ($mul):
+    Found cell that is never activated: $sub$fft_8point.v:325$5
+    Found cell that is never activated: $mul$fft_8point.v:325$4
+    Cell is never active. Sharing is pointless, we simply remove it.
+  Analyzing resource sharing options for $mul$fft_8point.v:325$3 ($mul):
+    Found cell that is never activated: $mul$fft_8point.v:325$3
+    Cell is never active. Sharing is pointless, we simply remove it.
+Removing 6 cells in module butterfly:
+  Removing cell $mul$fft_8point.v:325$3 ($mul).
+  Removing cell $mul$fft_8point.v:325$4 ($mul).
+  Removing cell $sub$fft_8point.v:325$5 ($sub).
+  Removing cell $mul$fft_8point.v:326$6 ($mul).
+  Removing cell $mul$fft_8point.v:326$7 ($mul).
+  Removing cell $add$fft_8point.v:326$8 ($add).
+
+3.14. Executing OPT pass (performing simple optimizations).
+
+3.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+<suppressed ~10 debug messages>
+
+3.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 127 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 126 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 118 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~29 debug messages>
+Removed a total of 9 cells.
+
+3.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~169 debug messages>
+
+3.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+    New input vector for $reduce_and cell $auto$opt_dff.cc:273:make_patterns_logic$2763: { \write_active $auto$rtlil.cc:3337:Not$2843 $auto$alumacc.cc:528:replace_alu$2869 }
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 1 changes.
+
+3.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 118 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 4 unused cells and 42 unused wires.
+<suppressed ~8 debug messages>
+
+3.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~169 debug messages>
+
+3.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 112 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 105 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+3.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+3.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.14.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~169 debug messages>
+
+3.14.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.14.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 202 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 105 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.14.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.14.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.14.23. Finished fast OPT passes. (There is nothing left to do.)
+
+3.15. Executing MEMORY pass.
+
+3.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+3.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+3.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+3.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+3.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+3.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+3.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+3.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.17. Executing OPT pass (performing simple optimizations).
+
+3.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~75 debug messages>
+Optimizing module tqvp_fft8.
+<suppressed ~15 debug messages>
+
+3.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 166 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 115 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 108 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+3.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 1 unused cells and 49 unused wires.
+<suppressed ~3 debug messages>
+
+3.17.5. Finished fast OPT passes.
+
+3.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+3.19. Executing OPT pass (performing simple optimizations).
+
+3.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~1 debug messages>
+Optimizing module tqvp_fft8.
+
+3.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 166 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 107 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~79 debug messages>
+
+3.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+    New ctrl vector for $pmux cell $procmux$1328: { \state [2] $auto$opt_reduce.cc:137:opt_pmux$2903 }
+    New ctrl vector for $pmux cell $procmux$1393: { \state [2] $auto$opt_reduce.cc:137:opt_pmux$2905 }
+    New ctrl vector for $pmux cell $procmux$1508: { \state [2] $auto$opt_reduce.cc:137:opt_pmux$2907 }
+    New ctrl vector for $pmux cell $procmux$1573: { \state [2] $auto$opt_reduce.cc:137:opt_pmux$2909 }
+    Consolidated identical input bits for $pmux cell $procmux$1677:
+      Old ports: A=16'0000000000000000, B=32'10000000000000011010010101111110, Y=$procmux$1677_Y
+      New ports: A=3'000, B=6'101110, Y={ $procmux$1677_Y [15] $procmux$1677_Y [1:0] }
+      New connections: $procmux$1677_Y [14:2] = { 1'0 $procmux$1677_Y [1] 2'00 $procmux$1677_Y [1] 1'0 $procmux$1677_Y [1] 1'0 $procmux$1677_Y [1] $procmux$1677_Y [1] $procmux$1677_Y [1] $procmux$1677_Y [1] $procmux$1677_Y [1] }
+    Consolidated identical input bits for $mux cell $procmux$1686:
+      Old ports: A=16'0000000000000000, B=16'1000000000000001, Y=$procmux$1686_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$1686_Y [0]
+      New connections: $procmux$1686_Y [15:1] = { $procmux$1686_Y [0] 14'00000000000000 }
+    Consolidated identical input bits for $pmux cell $procmux$1704:
+      Old ports: A=16'0111111111111111, B=48'010110101000001000000000000000001010010101111110, Y=$procmux$1704_Y
+      New ports: A=5'01111, B=15'010100000010110, Y={ $procmux$1704_Y [15] $procmux$1704_Y [7] $procmux$1704_Y [2:0] }
+      New connections: { $procmux$1704_Y [14:8] $procmux$1704_Y [6:3] } = { $procmux$1704_Y [7] $procmux$1704_Y [2] $procmux$1704_Y [7] $procmux$1704_Y [7] $procmux$1704_Y [2] $procmux$1704_Y [7] $procmux$1704_Y [2] $procmux$1704_Y [2] $procmux$1704_Y [2] $procmux$1704_Y [2] $procmux$1704_Y [2] }
+    Consolidated identical input bits for $mux cell $procmux$1713:
+      Old ports: A=16'0111111111111111, B=16'0000000000000000, Y=$procmux$1713_Y
+      New ports: A=1'1, B=1'0, Y=$procmux$1713_Y [0]
+      New connections: $procmux$1713_Y [15:1] = { 1'0 $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] }
+  Optimizing cells in module \fft_8point.
+    Consolidated identical input bits for $pmux cell $procmux$1682:
+      Old ports: A=16'0000000000000000, B={ $procmux$1686_Y $procmux$1677_Y }, Y=$0\bfly_w_im[15:0]
+      New ports: A=3'000, B={ $procmux$1686_Y [0] 1'0 $procmux$1686_Y [0] $procmux$1677_Y [15] $procmux$1677_Y [1:0] }, Y={ $0\bfly_w_im[15:0] [15] $0\bfly_w_im[15:0] [1:0] }
+      New connections: $0\bfly_w_im[15:0] [14:2] = { 1'0 $0\bfly_w_im[15:0] [1] 2'00 $0\bfly_w_im[15:0] [1] 1'0 $0\bfly_w_im[15:0] [1] 1'0 $0\bfly_w_im[15:0] [1] $0\bfly_w_im[15:0] [1] $0\bfly_w_im[15:0] [1] $0\bfly_w_im[15:0] [1] $0\bfly_w_im[15:0] [1] }
+    Consolidated identical input bits for $pmux cell $procmux$1709:
+      Old ports: A=16'0111111111111111, B={ $procmux$1713_Y $procmux$1704_Y }, Y=$0\bfly_w_re[15:0]
+      New ports: A=5'01111, B={ 1'0 $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1713_Y [0] $procmux$1704_Y [15] $procmux$1704_Y [7] $procmux$1704_Y [2:0] }, Y={ $0\bfly_w_re[15:0] [15] $0\bfly_w_re[15:0] [7] $0\bfly_w_re[15:0] [2:0] }
+      New connections: { $0\bfly_w_re[15:0] [14:8] $0\bfly_w_re[15:0] [6:3] } = { $0\bfly_w_re[15:0] [7] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [7] $0\bfly_w_re[15:0] [7] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [7] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [2] $0\bfly_w_re[15:0] [2] }
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$275:
+      Old ports: A=0, B={ $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 [15] $7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202 }, Y=$6\data_out[31:0]
+      New ports: A=16'0000000000000000, B=$7$mem2reg_rd$\out_imag$peripheral.v:188$59_DATA[15:0]$202, Y=$6\data_out[31:0] [15:0]
+      New connections: $6\data_out[31:0] [31:16] = { $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] $6\data_out[31:0] [15] }
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$413:
+      Old ports: A=$6\data_out[31:0], B={ $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 [15] $6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191 }, Y=$5\data_out[31:0]
+      New ports: A=$6\data_out[31:0] [15:0], B=$6$mem2reg_rd$\out_real$peripheral.v:182$57_DATA[15:0]$191, Y=$5\data_out[31:0] [15:0]
+      New connections: $5\data_out[31:0] [31:16] = { $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] $5\data_out[31:0] [15] }
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$548:
+      Old ports: A=$5\data_out[31:0], B={ 30'000000000000000000000000000000 \done_flag \fft_busy }, Y=$4\data_out[31:0]
+      New ports: A=$5\data_out[31:0] [15:0], B={ 14'00000000000000 \done_flag \fft_busy }, Y=$4\data_out[31:0] [15:0]
+      New connections: $4\data_out[31:0] [31:16] = { $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] $4\data_out[31:0] [15] }
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$692:
+      Old ports: A=$4\data_out[31:0], B={ $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 [15] $4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167 }, Y=$3\data_out[31:0]
+      New ports: A=$4\data_out[31:0] [15:0], B=$4$mem2reg_rd$\in_imag$peripheral.v:171$55_DATA[15:0]$167, Y=$3\data_out[31:0] [15:0]
+      New connections: $3\data_out[31:0] [31:16] = { $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] $3\data_out[31:0] [15] }
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$839:
+      Old ports: A={ $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 [15] $3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148 }, B=$3\data_out[31:0], Y=$2\data_out[31:0]
+      New ports: A=$3$mem2reg_rd$\in_real$peripheral.v:165$53_DATA[15:0]$148, B=$3\data_out[31:0] [15:0], Y=$2\data_out[31:0] [15:0]
+      New connections: $2\data_out[31:0] [31:16] = { $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] $2\data_out[31:0] [15] }
+  Optimizing cells in module \tqvp_fft8.
+    Consolidated identical input bits for $mux cell $procmux$988:
+      Old ports: A=0, B=$2\data_out[31:0], Y=\data_out
+      New ports: A=16'0000000000000000, B=$2\data_out[31:0] [15:0], Y=\data_out [15:0]
+      New connections: \data_out [31:16] = { \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] \data_out [15] }
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 16 changes.
+
+3.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 170 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 167 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~9 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 107 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 3 cells.
+
+3.19.6. Executing OPT_SHARE pass.
+
+3.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+3.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~2 debug messages>
+Optimizing module tqvp_fft8.
+
+3.19.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.19.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~77 debug messages>
+
+3.19.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.19.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 166 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 107 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.19.14. Executing OPT_SHARE pass.
+
+3.19.15. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$2617 ($dffe) from module fft_8point.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$2617 ($dffe) from module fft_8point.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$2617 ($dffe) from module fft_8point.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$2617 ($dffe) from module fft_8point.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$2617 ($dffe) from module fft_8point.
+
+3.19.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+3.19.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.19.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.19.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \butterfly..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \fft_8point..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tqvp_fft8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~77 debug messages>
+
+3.19.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \butterfly.
+  Optimizing cells in module \fft_8point.
+  Optimizing cells in module \tqvp_fft8.
+Performed a total of 0 changes.
+
+3.19.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 6 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 166 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 107 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Removed a total of 0 cells.
+
+3.19.22. Executing OPT_SHARE pass.
+
+3.19.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+
+3.19.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+Optimizing module tqvp_fft8.
+
+3.19.26. Finished fast OPT passes. (There is nothing left to do.)
+
+3.20. Executing TECHMAP pass (map to technology primitives).
+
+3.20.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `\$connect'.
+Generating RTLIL representation for module `\$input_port'.
+Successfully finished Verilog frontend.
+
+3.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod$b8c0a997bce700f23568a5ada79cc6781d1f5ca0\_90_alu for cells of type $alu.
+Using template $paramod$dad13a281fa6a9ffd6dd427a87dc9a952e80e9ea\_90_alu for cells of type $alu.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$504d7726e493b7d5a8a8ac16f387eb0143f8a853\_90_pmux for cells of type $pmux.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using template $paramod$0d149ffe75563ef6fcc1a3dddc59d00af28651a7\_90_pmux for cells of type $pmux.
+Using template $paramod$32e7c4d6f92ff4337599ece53082d2e88a82a9f2\_90_pmux for cells of type $pmux.
+Using template $paramod$fedb90247e1daaa8b0af86a595f377181f141d27\_90_pmux for cells of type $pmux.
+Using template $paramod$70d30c21ff772b34d0d1da2801fbd781dc3c70e4\_90_pmux for cells of type $pmux.
+Using template $paramod$d5c1c4131927aec19f116e7a36372b1981bfcd7e\_90_pmux for cells of type $pmux.
+Using template $paramod$d4c0c20b0ee59f495e14575c4397dc0a6dd9e8e6\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \b_re * \w_im (16x16 bits, signed)
+  add \b_im * \w_re (16x16 bits, signed)
+  add 31'0000000000000000100000000000000 (31 bits, unsigned)
+  add \b_re * \w_re (16x16 bits, signed)
+  sub \b_im * \w_im (16x16 bits, signed)
+  add 31'0000000000000000100000000000000 (31 bits, unsigned)
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011111 for cells of type $fa.
+Using template $paramod$ebf89ea36a793f0f77858f212141d47c833068ad\_90_alu for cells of type $alu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011110 for cells of type $fa.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011111 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~3093 debug messages>
+
+3.21. Executing OPT pass (performing simple optimizations).
+
+3.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+<suppressed ~3932 debug messages>
+Optimizing module fft_8point.
+<suppressed ~98 debug messages>
+Optimizing module tqvp_fft8.
+<suppressed ~256 debug messages>
+
+3.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 10173 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 9622 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 9292 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 9030 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8887 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8787 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8697 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8644 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8600 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8564 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8546 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+<suppressed ~4881 debug messages>
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 3114 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 2836 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Computing hashes of 2788 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+<suppressed ~978 debug messages>
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 1520 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1454 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1432 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1427 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1425 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1424 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~288 debug messages>
+Removed a total of 2049 cells.
+
+3.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 282 unused cells and 3527 unused wires.
+<suppressed ~285 debug messages>
+
+3.21.5. Finished fast OPT passes.
+
+3.22. Executing ABC pass (technology mapping using ABC).
+
+3.22.1. Extracting gate netlist of module `\butterfly' to `<abc-temp-dir>/input.blif'..
+
+3.22.1.1. Executed ABC.
+Extracted 8279 gates and 8375 wires to a netlist network with 96 inputs and 64 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-s72GKA/stdcells.genlib 
+ABC: + strash 
+ABC: + dretime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+3.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      920
+ABC RESULTS:            ANDNOT cells:     2439
+ABC RESULTS:               MUX cells:        2
+ABC RESULTS:              NAND cells:      311
+ABC RESULTS:               NOR cells:      322
+ABC RESULTS:               NOT cells:      154
+ABC RESULTS:                OR cells:      863
+ABC RESULTS:             ORNOT cells:      282
+ABC RESULTS:              XNOR cells:      756
+ABC RESULTS:               XOR cells:     1977
+ABC RESULTS:        internal signals:     8215
+ABC RESULTS:           input signals:       96
+ABC RESULTS:          output signals:       64
+Removing temp directory.
+
+3.22.2. Extracting gate netlist of module `\fft_8point' to `<abc-temp-dir>/input.blif'..
+
+3.22.2.1. Executed ABC.
+Extracted 2191 gates and 2781 wires to a netlist network with 588 inputs and 351 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-s72GKA/stdcells.genlib 
+ABC: + strash 
+ABC: + dretime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+3.22.2.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      616
+ABC RESULTS:            ANDNOT cells:      324
+ABC RESULTS:               MUX cells:      515
+ABC RESULTS:              NAND cells:      130
+ABC RESULTS:               NOR cells:       35
+ABC RESULTS:               NOT cells:       41
+ABC RESULTS:                OR cells:      477
+ABC RESULTS:             ORNOT cells:       69
+ABC RESULTS:        internal signals:     1842
+ABC RESULTS:           input signals:      588
+ABC RESULTS:          output signals:      351
+Removing temp directory.
+
+3.22.3. Extracting gate netlist of module `\tqvp_fft8' to `<abc-temp-dir>/input.blif'..
+
+3.22.3.1. Executed ABC.
+Extracted 1150 gates and 1677 wires to a netlist network with 526 inputs and 34 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-s72GKA/stdcells.genlib 
+ABC: + strash 
+ABC: + dretime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+3.22.3.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:        3
+ABC RESULTS:            ANDNOT cells:      608
+ABC RESULTS:               MUX cells:      118
+ABC RESULTS:              NAND cells:        5
+ABC RESULTS:               NOR cells:        6
+ABC RESULTS:               NOT cells:       51
+ABC RESULTS:                OR cells:      256
+ABC RESULTS:             ORNOT cells:      108
+ABC RESULTS:              XNOR cells:        1
+ABC RESULTS:               XOR cells:        2
+ABC RESULTS:        internal signals:     1117
+ABC RESULTS:           input signals:      526
+ABC RESULTS:          output signals:       34
+Removing temp directory.
+Removing global temp directory.
+
+3.23. Executing OPT pass (performing simple optimizations).
+
+3.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module butterfly.
+Optimizing module fft_8point.
+<suppressed ~128 debug messages>
+Optimizing module tqvp_fft8.
+<suppressed ~16 debug messages>
+
+3.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\butterfly'.
+Computing hashes of 8026 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+Computing hashes of 8020 cells of `\butterfly'.
+Finding duplicate cells in `\butterfly'.
+<suppressed ~18 debug messages>
+Finding identical cells in module `\fft_8point'.
+Computing hashes of 2804 cells of `\fft_8point'.
+Finding duplicate cells in `\fft_8point'.
+Finding identical cells in module `\tqvp_fft8'.
+Computing hashes of 1417 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1413 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1412 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+Computing hashes of 1411 cells of `\tqvp_fft8'.
+Finding duplicate cells in `\tqvp_fft8'.
+<suppressed ~18 debug messages>
+Removed a total of 12 cells.
+
+3.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \butterfly..
+Finding unused cells or wires in module \fft_8point..
+Finding unused cells or wires in module \tqvp_fft8..
+Removed 1 unused cells and 3004 unused wires.
+<suppressed ~8 debug messages>
+
+3.23.5. Finished fast OPT passes.
+
+3.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `tqvp_fft8'. Setting top module to tqvp_fft8.
+
+3.24.1. Analyzing design hierarchy..
+Top module:  \tqvp_fft8
+Used module:     \fft_8point
+Used module:         \butterfly
+
+3.24.2. Analyzing design hierarchy..
+Top module:  \tqvp_fft8
+Used module:     \fft_8point
+Used module:         \butterfly
+Removed 0 unused modules.
+
+3.25. Printing statistics.
+
+=== butterfly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     7970 wires
+     8158 wire bits
+       12 public wires
+      200 public wire bits
+       10 ports
+      160 port bits
+     8020 cells
+     2439   $_ANDNOT_
+      920   $_AND_
+        2   $_MUX_
+      311   $_NAND_
+      322   $_NOR_
+      154   $_NOT_
+      282   $_ORNOT_
+      863   $_OR_
+      756   $_XNOR_
+     1971   $_XOR_
+
+=== fft_8point ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1966 wires
+     3150 wire bits
+       65 public wires
+      943 public wire bits
+       37 ports
+      517 port bits
+     2803 cells
+      324   $_ANDNOT_
+      616   $_AND_
+      257   $_DFFE_PN0P_
+      328   $_DFFE_PP_
+        9   $_DFF_PN0_
+        2   $_DFF_PN1_
+      515   $_MUX_
+      130   $_NAND_
+       35   $_NOR_
+       41   $_NOT_
+       69   $_ORNOT_
+      477   $_OR_
+        1 submodules
+        1   butterfly
+
+=== tqvp_fft8 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1183 wires
+     1751 wire bits
+       48 public wires
+      616 public wire bits
+       11 ports
+       94 port bits
+     1409 cells
+      607   $_ANDNOT_
+        3   $_AND_
+      256   $_DFFE_PN0P_
+        2   $_DFF_PN0_
+      118   $_MUX_
+        4   $_NAND_
+        5   $_NOR_
+       50   $_NOT_
+      106   $_ORNOT_
+      256   $_OR_
+        1   $_XNOR_
+        1   $_XOR_
+        1 submodules
+        1   fft_8point
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    12232 tqvp_fft8
+     2803 fft_8point
+     8020   butterfly
+
+        +----------Count including submodules.
+        | 
+    11119 wires
+    13059 wire bits
+      125 public wires
+     1759 public wire bits
+       58 ports
+      771 port bits
+        - memories
+        - memory bits
+        - processes
+    12232 cells
+     3370   $_ANDNOT_
+     1539   $_AND_
+      513   $_DFFE_PN0P_
+      328   $_DFFE_PP_
+       11   $_DFF_PN0_
+        2   $_DFF_PN1_
+      635   $_MUX_
+      445   $_NAND_
+      362   $_NOR_
+      245   $_NOT_
+      457   $_ORNOT_
+     1596   $_OR_
+      757   $_XNOR_
+     1972   $_XOR_
+        1 submodules
+        1   fft_8point
+
+3.26. Executing CHECK pass (checking for obvious problems).
+Checking module butterfly...
+Checking module fft_8point...
+Checking module tqvp_fft8...
+Found and reported 0 problems.
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `\butterfly' to `<abc-temp-dir>/input.blif'..
+
+4.1.1. Executed ABC.
+Extracted 8020 gates and 8116 wires to a netlist network with 96 inputs and 62 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-MTPD4H/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     1215
+ABC RESULTS:              NAND cells:     3639
+ABC RESULTS:               NOR cells:       12
+ABC RESULTS:               NOT cells:       99
+ABC RESULTS:                OR cells:      256
+ABC RESULTS:               XOR cells:     2561
+ABC RESULTS:        internal signals:     7958
+ABC RESULTS:           input signals:       96
+ABC RESULTS:          output signals:       62
+Removing temp directory.
+
+4.2. Extracting gate netlist of module `\fft_8point' to `<abc-temp-dir>/input.blif'..
+
+4.2.1. Executed ABC.
+Extracted 2207 gates and 2795 wires to a netlist network with 588 inputs and 351 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-MTPD4H/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+4.2.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      700
+ABC RESULTS:              NAND cells:     1448
+ABC RESULTS:               NOR cells:        7
+ABC RESULTS:               NOT cells:        9
+ABC RESULTS:                OR cells:      186
+ABC RESULTS:        internal signals:     1856
+ABC RESULTS:           input signals:      588
+ABC RESULTS:          output signals:      351
+Removing temp directory.
+
+4.3. Extracting gate netlist of module `\tqvp_fft8' to `<abc-temp-dir>/input.blif'..
+
+4.3.1. Executed ABC.
+Extracted 1151 gates and 1677 wires to a netlist network with 526 inputs and 34 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Jan 18 2026 18:12:24)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library /tmp/yosys-abc-MTPD4H/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+
+4.3.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      516
+ABC RESULTS:              NAND cells:      622
+ABC RESULTS:               NOR cells:       18
+ABC RESULTS:               NOT cells:        4
+ABC RESULTS:                OR cells:       26
+ABC RESULTS:        internal signals:     1117
+ABC RESULTS:           input signals:      526
+ABC RESULTS:          output signals:       34
+Removing temp directory.
+Removing global temp directory.
+
+5. Printing statistics.
+
+=== butterfly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15848 wires
+    16036 wire bits
+       12 public wires
+      200 public wire bits
+       10 ports
+      160 port bits
+     7782 cells
+     1215   $_AND_
+     3639   $_NAND_
+       12   $_NOR_
+       99   $_NOT_
+      256   $_OR_
+     2561   $_XOR_
+
+=== fft_8point ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     4904 wires
+     6088 wire bits
+       65 public wires
+      943 public wire bits
+       37 ports
+      517 port bits
+     2946 cells
+      700   $_AND_
+      257   $_DFFE_PN0P_
+      328   $_DFFE_PP_
+        9   $_DFF_PN0_
+        2   $_DFF_PN1_
+     1448   $_NAND_
+        7   $_NOR_
+        9   $_NOT_
+      186   $_OR_
+        1 submodules
+        1   butterfly
+
+=== tqvp_fft8 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2895 wires
+     3463 wire bits
+       48 public wires
+      616 public wire bits
+       11 ports
+       94 port bits
+     1444 cells
+      516   $_AND_
+      256   $_DFFE_PN0P_
+        2   $_DFF_PN0_
+      622   $_NAND_
+       18   $_NOR_
+        4   $_NOT_
+       26   $_OR_
+        1 submodules
+        1   fft_8point
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    12172 tqvp_fft8
+     2946 fft_8point
+     7782   butterfly
+
+        +----------Count including submodules.
+        | 
+    23647 wires
+    25587 wire bits
+      125 public wires
+     1759 public wire bits
+       58 ports
+      771 port bits
+        - memories
+        - memory bits
+        - processes
+    12172 cells
+     2431   $_AND_
+      513   $_DFFE_PN0P_
+      328   $_DFFE_PP_
+       11   $_DFF_PN0_
+        2   $_DFF_PN1_
+     5709   $_NAND_
+       37   $_NOR_
+      112   $_NOT_
+      468   $_OR_
+     2561   $_XOR_
+        1 submodules
+        1   fft_8point
+
+6. Executing Verilog backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Dumping module `\butterfly'.
+Dumping module `\fft_8point'.
+Dumping module `\tqvp_fft8'.
+
+Warnings: 4 unique messages, 4 total
+End of script. Logfile hash: 28564c3513, CPU: user 1.91s system 0.06s, MEM: 52.83 MB peak
+Yosys 0.61+21 (git sha1 967b47d98, clang++ 18.1.3 -fPIC -O3)
+Time spent: 55% 2x abc (1 sec), 10% 31x opt_expr (0 sec), ...

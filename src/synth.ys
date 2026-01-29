@@ -1,0 +1,15 @@
+# Read Verilog files
+read_verilog fft_8point.v
+read_verilog peripheral.v
+
+# Synthesize for generic gates
+synth -top tqvp_fft8
+
+# Map to basic gates (NOT is automatically included)
+abc -g AND,OR,XOR,NAND,NOR
+
+# Print statistics
+stat
+
+# Write output
+write_verilog -noattr synth_output.v
