@@ -1,8 +1,10 @@
 # AI-HDL 2026 - 8-Point FFT Accelerator
 
-**Team:** DevRem  
+**Team:** Devrem </br>
+**Team Members:** <a href="https://www.linkedin.com/in/bhangun/" target="Batuhan Hangün">Batuhan Hangün</a> ,
+                  <a href="https://www.linkedin.com/in/safak-sahin/" target="Şafak Şahin">Şafak Şahin</a> </br> 
 **Competition:** AI-HDL 2026 Design Competition  
-**Phase:** Design Phase 1 (DP1)
+**Phase:** Design Phase 1 (DP1) </br> 
 
 ## Project Overview
 
