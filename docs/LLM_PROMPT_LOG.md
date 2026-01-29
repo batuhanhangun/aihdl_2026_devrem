@@ -1,0 +1,225 @@
+# LLM Prompt Log - AI-HDL 2026 Design Phase 1
+
+**Project:** 8-Point FFT Accelerator Peripheral  
+**Team:** Devrem  
+**LLM Used:** Claude (Anthropic)  
+**Date:** January 29, 2026
+
+---
+
+## Summary
+
+This document contains the key prompts used to generate the 8-Point FFT Accelerator peripheral for the TinyQV RISC-V core. The design was iteratively developed through conversation with Claude.
+
+---
+
+## Prompt 1: Project Initialization & Module Selection
+
+**Prompt:**
+
+```
+Read the details about the design competition I am participating.
+[Attached: AI-HDL 2026 Design Phase 1 Documentation]
+```
+
+**Response Summary:**  
+Claude analyzed the competition requirements, timeline, deliverables, and grading criteria. Identified key requirements: synthesizable RTL, verification, synthesis report, documentation, and GitHub tag.
+
+---
+
+## Prompt 2: Module Selection
+
+**Prompt:**
+
+```
+Now think like I am complete n00b in this stuff. I've just got installed programs in my WSL, rest is up to you, help me step by step.
+```
+
+**Follow-up:**
+
+```
+What about Fourier transform module?
+```
+
+**Response Summary:**  
+Claude recommended an 8-point FFT as a good balance between complexity (earning innovation points) and achievability. Outlined the register map and architecture approach using Radix-2 Decimation-in-Time algorithm with fixed-point arithmetic.
+
+---
+
+## Prompt 3: FFT Core Generation
+
+**Prompt:**
+
+```
+[After cloning repos and setting up project structure]
+Yes, proceed with generating the FFT Verilog code.
+```
+
+**Generated Files:**
+
+- `fft_8point.v` - 8-point FFT computation engine
+- `peripheral.v` - TinyQV bus interface wrapper
+
+**Key Design Decisions Made by LLM:**
+
+1. Radix-2 DIT (Decimation-in-Time) algorithm
+2. Q1.15 fixed-point format for twiddle factors
+3. Sequential butterfly computation (area-optimized)
+4. 3-stage pipeline: IDLE → STAGE1 → STAGE2 → STAGE3 → DONE
+5. Bit-reversed input ordering handled in hardware
+6. Complex multiplication with rounding
+
+---
+
+## Prompt 4: Testbench Generation
+
+**Prompt:**
+
+```
+[Implicit - part of the FFT generation request]
+Generate testbench to verify the FFT works.
+```
+
+**Generated File:**
+
+- `fft_8point_tb.v` - Comprehensive testbench
+
+**Test Cases Generated:**
+
+1. DC Signal (all ones) → Verify X[0] = 8×input, rest = 0
+2. Impulse (delta function) → Verify flat spectrum
+3. Alternating signal → Verify Nyquist bin response
+4. Single-cycle sine wave → Verify bins 1 and 7
+5. Two-cycle cosine wave → Verify bins 2 and 6
+
+---
+
+## Prompt 5: Synthesis Script
+
+**Prompt:**
+
+```
+[After successful simulation]
+Run synthesis with Yosys to get baseline PPA estimates.
+```
+
+**Generated:**
+
+- Yosys synthesis script (`synth.ys`)
+- Commands for running synthesis
+
+**Synthesis Results:**
+
+- Total Cells: 12,172
+- Flip-Flops: 854
+- NAND Gates: 5,709
+- XOR Gates: 2,561
+
+---
+
+## Prompt 6: Block Diagram Generation
+
+**Prompt:**
+
+```
+Yes generate block diagram.
+```
+
+**Generated Files:**
+
+- `fft_block_diagram.svg` - Hardware architecture diagram
+- `fft_butterfly_flow.svg` - FFT signal flow diagram
+
+---
+
+## Prompt 7: Documentation
+
+**Prompt:**
+
+```
+[Implicit - part of project setup]
+Create project documentation.
+```
+
+**Generated File:**
+
+- `docs/info.md` - Register map, usage example, architecture description
+
+---
+
+## Key LLM Contributions
+
+| Component | LLM Contribution |
+|-----------|------------------|
+| Architecture | Radix-2 DIT FFT with sequential butterflies |
+| Fixed-Point | Q1.15 twiddle factors with proper rounding |
+| Interface | TinyQV-compatible memory-mapped registers |
+| Verification | 5 mathematically-verified test cases |
+| Synthesis | Yosys script and gate-level analysis |
+| Documentation | Register map, block diagrams, usage examples |
+
+---
+
+## Design Iterations
+
+### Iteration 1: Initial FFT Core
+
+- Generated basic 8-point FFT structure
+- Implemented butterfly unit with complex multiplication
+
+### Iteration 2: Peripheral Wrapper
+
+- Added TinyQV bus interface
+- Implemented register map for CPU access
+- Added interrupt on completion
+
+### Iteration 3: Synthesis Fix
+
+- Fixed Yosys `abc` command syntax (removed NOT from gate list)
+- Successfully synthesized to ~12K cells
+
+---
+
+## Verification Results
+
+All LLM-generated test cases passed:
+
+```
+Test 1: DC Signal (all ones)         - PASS
+Test 2: Impulse Signal               - PASS  
+Test 3: Alternating Signal (Nyquist) - PASS
+Test 4: Single Cycle Sine Wave       - PASS
+Test 5: Two-Cycle Cosine Wave        - PASS
+```
+
+---
+
+## Lessons Learned
+
+1. **Fixed-Point Precision:** Q1.15 format provides sufficient precision for 8-point FFT with minimal rounding errors.
+
+2. **Bit-Reversal:** Handling bit-reversal at input stage simplifies the butterfly addressing.
+
+3. **Sequential vs Parallel:** Sequential butterfly computation trades latency for area - appropriate for peripheral use case.
+
+4. **Synthesis Tools:** Yosys ABC command syntax requires careful attention to supported gate types.
+
+---
+
+## Files Generated by LLM
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| `fft_8point.v` | ~280 | FFT computation core |
+| `peripheral.v` | ~200 | Bus interface wrapper |
+| `fft_8point_tb.v` | ~300 | Verification testbench |
+| `docs/info.md` | ~80 | Documentation |
+| `fft_block_diagram.svg` | ~250 | Architecture diagram |
+| `fft_butterfly_flow.svg` | ~200 | Signal flow diagram |
+| `synth.ys` | ~12 | Synthesis script |
+
+**Total LLM-Generated Code:** ~1,300 lines
+
+---
+
+*This prompt log was generated as part of the AI-HDL 2026 competition requirements to document the AI-assisted design methodology.*

@@ -53,7 +53,9 @@ The 8-point FFT is computed using a 3-stage Radix-2 DIT (Decimation-in-Time) but
 │   ├── peripheral.v       # TinyQV bus interface wrapper
 │   └── fft_8point_tb.v    # Testbench
 ├── docs/
-│   └── info.md            # Detailed documentation
+│   ├── DESIGN_REPORT.md   # Detailed design write-up & PPA results
+│   ├── LLM_PROMPT_LOG.md  # AI prompt history (required for DP1)
+│   └── info.md            # Quick reference documentation
 ├── fft_block_diagram.svg  # Architecture block diagram
 ├── fft_butterfly_flow.svg # Butterfly structure diagram
 ├── synthesis_report.txt   # Yosys synthesis output
