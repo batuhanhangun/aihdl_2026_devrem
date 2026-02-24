@@ -1,9 +1,24 @@
+# ============================================================================
+# Yosys Synthesis Script - DP2 Optimized
+# AI-HDL 2026 Competition - Design Phase 2
+#
+# Enhanced with additional optimization passes for PPA improvement:
+#   - Flatten for cross-module optimization
+#   - Resource sharing for multiplier reduction
+#   - Extra optimization passes
+# ============================================================================
+
 # Read Verilog files
 read_verilog fft_8point.v
 read_verilog peripheral.v
 
-# Synthesize for generic gates
-synth -top tqvp_fft8
+# Synthesize with flatten for cross-module optimization
+synth -top tqvp_fft8 -flatten
+
+# Additional optimization passes (DP2)
+opt -full
+share            # Resource sharing for arithmetic
+opt_clean
 
 # Map to basic gates (NOT is automatically included)
 abc -g AND,OR,XOR,NAND,NOR

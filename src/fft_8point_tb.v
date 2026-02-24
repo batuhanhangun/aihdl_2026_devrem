@@ -1,8 +1,9 @@
 // ============================================================================
 // Testbench for 8-Point FFT Module
-// AI-HDL 2026 Competition - Design Phase 1
+// AI-HDL 2026 Competition - Design Phase 2
 // 
 // This testbench verifies the FFT with known test vectors
+// DP2: Timing unchanged - testbench uses wait(done) which works with any latency
 // ============================================================================
 
 `timescale 1ns / 1ps
@@ -305,7 +306,7 @@ module fft_8point_tb;
     
     // Timeout watchdog
     initial begin
-        #100000;
+        #200000;  // DP2: Increased timeout for pipelined design
         $display("ERROR: Simulation timeout!");
         $finish;
     end

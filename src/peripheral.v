@@ -1,9 +1,13 @@
 // ============================================================================
 // TinyQV FFT Peripheral - 8-Point FFT Accelerator
-// AI-HDL 2026 Competition - Design Phase 1
+// AI-HDL 2026 Competition - Design Phase 2
 // 
 // This module wraps the 8-point FFT core with a memory-mapped register
 // interface compatible with TinyQV peripherals.
+//
+// DP2 Optimizations:
+//   - Clock gating on input registers (gated when FFT busy)
+//   - Improved write gating for power reduction
 //
 // Register Map (32-bit aligned):
 // 0x00-0x1C: INPUT_REAL[0-7]  - Real part of input samples (write)
@@ -111,6 +115,9 @@ module tqvp_fft8 (
     wire write_active = (data_write_n != 2'b11);
     wire [5:0] word_addr = address[5:0];  // Word-aligned address
     
+    // [DP2] Clock gating: only allow input register writes when FFT is NOT busy
+    wire input_reg_wr_en = write_active & ~fft_busy;
+    
     integer i;
     
     always @(posedge clk or negedge rst_n) begin
@@ -130,18 +137,21 @@ module tqvp_fft8 (
             end
             
             if (write_active) begin
-                // Input Real registers (addresses 0x00-0x07 word)
-                if (word_addr >= ADDR_IN_REAL_BASE && word_addr < ADDR_IN_REAL_BASE + 8) begin
-                    in_real[word_addr - ADDR_IN_REAL_BASE] <= data_in[15:0];
+                // [DP2] Input registers gated by input_reg_wr_en (blocked when FFT busy)
+                if (input_reg_wr_en) begin
+                    // Input Real registers (addresses 0x00-0x07 word)
+                    if (word_addr >= ADDR_IN_REAL_BASE && word_addr < ADDR_IN_REAL_BASE + 8) begin
+                        in_real[word_addr - ADDR_IN_REAL_BASE] <= data_in[15:0];
+                    end
+                    
+                    // Input Imag registers (addresses 0x08-0x0F word)
+                    else if (word_addr >= ADDR_IN_IMAG_BASE && word_addr < ADDR_IN_IMAG_BASE + 8) begin
+                        in_imag[word_addr - ADDR_IN_IMAG_BASE] <= data_in[15:0];
+                    end
                 end
                 
-                // Input Imag registers (addresses 0x08-0x0F word)
-                else if (word_addr >= ADDR_IN_IMAG_BASE && word_addr < ADDR_IN_IMAG_BASE + 8) begin
-                    in_imag[word_addr - ADDR_IN_IMAG_BASE] <= data_in[15:0];
-                end
-                
-                // Control register
-                else if (word_addr == ADDR_CONTROL) begin
+                // Control register (always writable)
+                if (word_addr == ADDR_CONTROL) begin
                     if (data_in[0] && !fft_busy) begin
                         fft_start <= 1'b1;
                         done_flag <= 1'b0;  // Clear done flag on new start

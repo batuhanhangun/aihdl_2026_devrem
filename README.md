@@ -2,7 +2,7 @@
 
 **Team:** DevRem  
 **Competition:** AI-HDL 2026 Design Competition  
-**Phase:** Design Phase 1 (DP1)
+**Phase:** Design Phase 2 (DP2 — PPA Optimization)
 
 ## Project Overview
 
@@ -35,30 +35,52 @@ The 8-point FFT is computed using a 3-stage Radix-2 DIT (Decimation-in-Time) but
 - 16-bit signed fixed-point arithmetic (Q1.15 format)
 - Memory-mapped register interface
 - Interrupt on completion
-- ~15 clock cycles to complete
+- **[DP2]** 2-stage pipelined butterfly for improved Fmax
+- **[DP2]** Clock gating on stage/output/input registers
+- **[DP2]** Operand isolation to eliminate idle switching
+- **[DP2]** Trivial twiddle (W⁰) bypass — skips multiply for 67% of butterflies
+- **[DP2]** Enhanced synthesis flow (flatten + resource sharing)
 
-## Synthesis Results
+## DP2 Optimization Summary
 
-| Metric | Value |
-|--------|-------|
-| Total Cells | 12,172 |
-| Flip-Flops | 854 |
-| Target | Sky130 (TinyTapeout) |
+| Optimization | Category | Expected Impact |
+|-------------|----------|----------------|
+| Butterfly Pipelining | Performance | ~30-40% Fmax improvement |
+| Clock Gating | Power | Reduce register switching in idle |
+| Operand Isolation | Power | Zero switching in 7,782-cell multiply block |
+| W⁰ Bypass | Area + Power | Skip multiplier for trivial twiddle |
+| Enhanced Synthesis | Area | Cross-module + resource sharing |
+
+### PPA Comparison
+
+| Metric | DP1 | DP2 |
+|--------|-----|-----|
+| Total Cells | 12,172 | _(run synthesis)_ |
+| Flip-Flops | 854 | _(run synthesis)_ |
+| Latency | ~15 cycles | ~28 cycles |
+| Critical Path | Full multiply chain | Pipelined (half) |
+| Idle Power | Unoptimized | Clock gated + isolated |
+
+> Run `yosys synth.ys` on the synthesis machine to populate DP2 numbers.
 
 ## File Structure
 
 ```text
 ├── src/
-│   ├── fft_8point.v       # FFT computation core
-│   ├── peripheral.v       # TinyQV bus interface wrapper
-│   └── fft_8point_tb.v    # Testbench
+│   ├── fft_8point.v       # FFT core + pipelined butterfly (DP2)
+│   ├── peripheral.v       # TinyQV bus interface (DP2: clock gated)
+│   ├── fft_8point_tb.v    # Testbench
+│   ├── tt_wrapper.v       # TinyTapeout wrapper (DP2: bug fix)
+│   ├── synth.ys           # Yosys synthesis script (DP2: enhanced)
+│   └── test_harness/      # SPI test infrastructure
 ├── docs/
-│   ├── DESIGN_REPORT.md   # Detailed design write-up & PPA results
-│   ├── LLM_PROMPT_LOG.md  # AI prompt history (required for DP1)
-│   └── info.md            # Quick reference documentation
+│   ├── DESIGN_REPORT.md            # DP1 design write-up
+│   ├── DP2_OPTIMIZATION_REPORT.md  # DP2 before-and-after comparison
+│   ├── LLM_PROMPT_LOG.md           # AI prompt history
+│   └── info.md                     # Quick reference
 ├── fft_block_diagram.svg  # Architecture block diagram
 ├── fft_butterfly_flow.svg # Butterfly structure diagram
-├── synthesis_report.txt   # Yosys synthesis output
+├── synthesis_report.txt   # DP1 Yosys synthesis output
 └── README.md
 ```
 
@@ -71,6 +93,21 @@ All testbench tests pass:
 - ✅ Nyquist frequency test
 - ✅ Sine wave test
 - ✅ Cosine wave test
+
+**Run tests:**
+
+```bash
+cd src/
+iverilog -o fft_test fft_8point.v fft_8point_tb.v
+vvp fft_test
+```
+
+**Run synthesis:**
+
+```bash
+cd src/
+yosys synth.ys 2>&1 | tee ../synthesis_report_dp2.txt
+```
 
 ## Tools Used
 

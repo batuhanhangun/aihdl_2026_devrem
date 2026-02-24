@@ -329,6 +329,6 @@ aihdl_2026_devrem/
 
 ---
 
-**Prepared by:** Team DevRem  
+**Prepared by:** Team Devrem  
 **AI-HDL 2026 Competition**  
 **Design Phase 1 Submission**
