@@ -49,8 +49,12 @@ module tt_um_tqv_peripheral_harness (
     .data_read_n(data_read_n),
     .data_out(data_out),
     .data_ready(data_ready),
-    .user_interrupt(user_interrupt)
+    .user_interrupt(user_interrupt),
+    .spi_lock(spi_lock)         // [DP3-CM-A] lock output gates SPI path below
   );
+
+  // [DP3-CM-A] SPI lock status from peripheral — gates the entire SPI transaction path
+  wire spi_lock;
 
   // SPI data indications
   wire addr_valid;
@@ -97,20 +101,25 @@ module tt_um_tqv_peripheral_harness (
     .txn_width(txn_n)
   );
 
+  // [DP3-CM-A] SPI transaction path gated by spi_lock.
+  // When locked (production mode): all SPI writes and reads are suppressed;
+  // MISO serialises zeros so no register data leaks onto the physical bus.
+  // CPU bus path (data_write_n / data_read_n from TinyQV) is unaffected.
   always @(*) begin
-      data_write_n = 2'b11;
-      data_read_n = 2'b11;
+      data_write_n = 2'b11;   // default: no transaction
+      data_read_n  = 2'b11;
 
-      if (data_valid && data_rw) begin
-        data_write_n = txn_n;
-      end
-      if (addr_valid && !data_rw) begin
-        data_read_n = txn_n;
+      if (!spi_lock) begin
+          if (data_valid && data_rw)  data_write_n = txn_n;
+          if (addr_valid && !data_rw) data_read_n  = txn_n;
       end
 
-      data_out_masked = data_out;
-      if (txn_n[1] == 1'b0) data_out_masked[31:16] = 0;
-      if (txn_n == 2'b00) data_out_masked[15:8] = 0;
+      // Return zeros on MISO when locked; apply width masking otherwise
+      data_out_masked = spi_lock ? 32'd0 : data_out;
+      if (!spi_lock) begin
+          if (txn_n[1] == 1'b0) data_out_masked[31:16] = 0;
+          if (txn_n == 2'b00)   data_out_masked[15:8]  = 0;
+      end
   end
 
   // Assign outputs

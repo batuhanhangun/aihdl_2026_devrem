@@ -1,7 +1,7 @@
 // ============================================================================
 // 8-Point FFT Module
-// AI-HDL 2026 Competition - Design Phase 2
-// 
+// AI-HDL 2026 Competition - Design Phase 2 / Design Phase 3
+//
 // This module implements an 8-point Radix-2 Decimation-in-Time FFT
 // using fixed-point arithmetic (Q1.15 format for twiddle factors)
 //
@@ -10,23 +10,32 @@
 //   - Clock gating on stage/output registers for power reduction
 //   - Operand isolation on butterfly inputs for switching reduction
 //   - Trivial twiddle factor (W0) bypass for area/power savings
+//
+// DP3 Security Hardening:
+//   - CM-G: Stage and butterfly registers reset-initialized (power-on determinism)
+//   - CM-F: FSM hardening — default clauses clear busy, assert fsm_error output
+//   - CM-E: Butterfly Stage 2 uses saturating arithmetic (17-bit Q1.15 overflow guard)
+//   - CM-B: Stage registers zeroized in DONE state after results copied to outputs
 // ============================================================================
 
 module fft_8point (
     input  wire        clk,
     input  wire        rst_n,
-    
+
     // Control interface
     input  wire        start,          // Pulse to start FFT computation
     output reg         busy,           // High while computing
     output reg         done,           // Pulses high when complete
-    
+
+    // [DP3-CM-F] FSM error flag: set on illegal state or sub-state entry
+    output reg         fsm_error,
+
     // Input samples (16-bit signed real + 16-bit signed imaginary)
     input  wire signed [15:0] in_real_0, in_real_1, in_real_2, in_real_3,
     input  wire signed [15:0] in_real_4, in_real_5, in_real_6, in_real_7,
     input  wire signed [15:0] in_imag_0, in_imag_1, in_imag_2, in_imag_3,
     input  wire signed [15:0] in_imag_4, in_imag_5, in_imag_6, in_imag_7,
-    
+
     // Output samples (16-bit signed real + 16-bit signed imaginary)
     output reg  signed [15:0] out_real_0, out_real_1, out_real_2, out_real_3,
     output reg  signed [15:0] out_real_4, out_real_5, out_real_6, out_real_7,
@@ -42,7 +51,7 @@ module fft_8point (
     // W8^1 = 0.7071 - j*0.7071  ->  23170, -23170
     // W8^2 = 0.0000 - j*1.0000  ->      0, -32767
     // W8^3 =-0.7071 - j*0.7071  -> -23170, -23170
-    
+
     localparam signed [15:0] W0_RE =  16'sd32767;   // cos(0)
     localparam signed [15:0] W0_IM =  16'sd0;       // -sin(0)
     localparam signed [15:0] W1_RE =  16'sd23170;   // cos(pi/4)
@@ -60,35 +69,37 @@ module fft_8point (
     localparam STAGE2 = 3'd2;
     localparam STAGE3 = 3'd3;
     localparam DONE   = 3'd4;
-    
+
     reg [2:0] state;
-    
+
     // ========================================================================
     // Working Registers (bit-reversed input order for DIT FFT)
     // Input order: 0,4,2,6,1,5,3,7 (bit-reversed indices)
+    // [DP3-CM-G] Now reset-initialized (previously had no reset clause)
     // ========================================================================
     reg signed [15:0] stage_real [0:7];
     reg signed [15:0] stage_imag [0:7];
-    
+
     // ========================================================================
     // [DP2] Clock gating enable signals (Power Optimization)
     // ========================================================================
     wire stage_reg_en = (state != IDLE);
     wire output_reg_en = (state == DONE);
-    
+
     // ========================================================================
     // [DP2] Operand isolation & butterfly control
     // ========================================================================
     wire bfly_active = (state == STAGE1 || state == STAGE2 || state == STAGE3);
-    
+
     // Butterfly computation registers
+    // [DP3-CM-G] Now reset-initialized (previously had no reset clause)
     reg signed [15:0] bfly_a_re, bfly_a_im;
     reg signed [15:0] bfly_b_re, bfly_b_im;
     reg signed [15:0] bfly_w_re, bfly_w_im;
-    
+
     // [DP2] Trivial twiddle bypass flag
     reg bfly_trivial_w;   // 1 when twiddle = W0 (multiply = identity)
-    
+
     // Operand-isolated butterfly inputs (zero when not active)
     wire signed [15:0] bfly_a_re_iso = bfly_active ? bfly_a_re : 16'sd0;
     wire signed [15:0] bfly_a_im_iso = bfly_active ? bfly_a_im : 16'sd0;
@@ -102,7 +113,7 @@ module fft_8point (
     wire signed [15:0] bfly_out_a_re, bfly_out_a_im;
     wire signed [15:0] bfly_out_b_re, bfly_out_b_im;
     wire               bfly_out_valid;
-    
+
     // ========================================================================
     // [DP2] Pipelined Butterfly Unit Instance
     // ========================================================================
@@ -123,7 +134,7 @@ module fft_8point (
         .out_b_im(bfly_out_b_im),
         .valid_out(bfly_out_valid)
     );
-    
+
     // ========================================================================
     // Sub-state counter for sequential butterfly operations
     // DP2: Extra states added for pipeline latency (SETUP -> WAIT -> STORE)
@@ -133,18 +144,19 @@ module fft_8point (
     //   ... repeats for each butterfly in the stage
     // ========================================================================
     reg [3:0] bfly_cnt;
-    
+
     // ========================================================================
     // Main State Machine
     // ========================================================================
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state <= IDLE;
-            busy <= 1'b0;
-            done <= 1'b0;
-            bfly_cnt <= 4'd0;
+            state        <= IDLE;
+            busy         <= 1'b0;
+            done         <= 1'b0;
+            bfly_cnt     <= 4'd0;
             bfly_trivial_w <= 1'b0;
-            
+            fsm_error    <= 1'b0;   // [DP3-CM-F] initialize error flag
+
             // Clear outputs
             out_real_0 <= 16'd0; out_real_1 <= 16'd0;
             out_real_2 <= 16'd0; out_real_3 <= 16'd0;
@@ -154,16 +166,32 @@ module fft_8point (
             out_imag_2 <= 16'd0; out_imag_3 <= 16'd0;
             out_imag_4 <= 16'd0; out_imag_5 <= 16'd0;
             out_imag_6 <= 16'd0; out_imag_7 <= 16'd0;
-            
+
+            // [DP3-CM-G] Initialize stage registers (previously no reset clause)
+            stage_real[0] <= 16'sd0; stage_imag[0] <= 16'sd0;
+            stage_real[1] <= 16'sd0; stage_imag[1] <= 16'sd0;
+            stage_real[2] <= 16'sd0; stage_imag[2] <= 16'sd0;
+            stage_real[3] <= 16'sd0; stage_imag[3] <= 16'sd0;
+            stage_real[4] <= 16'sd0; stage_imag[4] <= 16'sd0;
+            stage_real[5] <= 16'sd0; stage_imag[5] <= 16'sd0;
+            stage_real[6] <= 16'sd0; stage_imag[6] <= 16'sd0;
+            stage_real[7] <= 16'sd0; stage_imag[7] <= 16'sd0;
+
+            // [DP3-CM-G] Initialize butterfly working registers (previously no reset clause)
+            bfly_a_re <= 16'sd0; bfly_a_im <= 16'sd0;
+            bfly_b_re <= 16'sd0; bfly_b_im <= 16'sd0;
+            bfly_w_re <= 16'sd0; bfly_w_im <= 16'sd0;
+
         end else begin
             done <= 1'b0;  // Default: done is a pulse
-            
+
             case (state)
                 IDLE: begin
                     if (start) begin
-                        busy <= 1'b1;
-                        bfly_cnt <= 4'd0;
-                        
+                        busy      <= 1'b1;
+                        bfly_cnt  <= 4'd0;
+                        fsm_error <= 1'b0;  // [DP3-CM-F] clear error on successful start
+
                         // Load inputs in bit-reversed order for DIT FFT
                         // Bit-reverse of 0,1,2,3,4,5,6,7 = 0,4,2,6,1,5,3,7
                         stage_real[0] <= in_real_0;  stage_imag[0] <= in_imag_0;
@@ -174,11 +202,11 @@ module fft_8point (
                         stage_real[5] <= in_real_5;  stage_imag[5] <= in_imag_5;
                         stage_real[6] <= in_real_3;  stage_imag[6] <= in_imag_3;
                         stage_real[7] <= in_real_7;  stage_imag[7] <= in_imag_7;
-                        
+
                         state <= STAGE1;
                     end
                 end
-                
+
                 // ==============================================================
                 // Stage 1: 4 butterflies with W8^0 (trivial twiddle = 1)
                 // Pairs: (0,1), (2,3), (4,5), (6,7)
@@ -243,10 +271,14 @@ module fft_8point (
                             bfly_cnt <= 4'd0;
                             state <= STAGE2;
                         end
-                        default: bfly_cnt <= 4'd0;
+                        // [DP3-CM-F] Illegal sub-state: reset counter and flag error
+                        default: begin
+                            bfly_cnt  <= 4'd0;
+                            fsm_error <= 1'b1;
+                        end
                     endcase
                 end
-                
+
                 // ==============================================================
                 // Stage 2: 4 butterflies with W8^0 and W8^2
                 // Pairs: (0,2), (1,3), (4,6), (5,7)
@@ -310,10 +342,14 @@ module fft_8point (
                             bfly_cnt <= 4'd0;
                             state <= STAGE3;
                         end
-                        default: bfly_cnt <= 4'd0;
+                        // [DP3-CM-F] Illegal sub-state: reset counter and flag error
+                        default: begin
+                            bfly_cnt  <= 4'd0;
+                            fsm_error <= 1'b1;
+                        end
                     endcase
                 end
-                
+
                 // ==============================================================
                 // Stage 3: 4 butterflies with W8^0, W8^1, W8^2, W8^3
                 // Pairs: (0,4), (1,5), (2,6), (3,7)
@@ -377,10 +413,14 @@ module fft_8point (
                             bfly_cnt <= 4'd0;
                             state <= DONE;
                         end
-                        default: bfly_cnt <= 4'd0;
+                        // [DP3-CM-F] Illegal sub-state: reset counter and flag error
+                        default: begin
+                            bfly_cnt  <= 4'd0;
+                            fsm_error <= 1'b1;
+                        end
                     endcase
                 end
-                
+
                 DONE: begin
                     // Copy results to outputs
                     out_real_0 <= stage_real[0]; out_imag_0 <= stage_imag[0];
@@ -391,13 +431,33 @@ module fft_8point (
                     out_real_5 <= stage_real[5]; out_imag_5 <= stage_imag[5];
                     out_real_6 <= stage_real[6]; out_imag_6 <= stage_imag[6];
                     out_real_7 <= stage_real[7]; out_imag_7 <= stage_imag[7];
-                    
-                    done <= 1'b1;
-                    busy <= 1'b0;
+
+                    // [DP3-CM-B] Zeroize stage registers after copying to outputs.
+                    // Non-blocking semantics guarantee outputs receive the old values above.
+                    // Prevents stale intermediate data from leaking across computations.
+                    stage_real[0] <= 16'sd0; stage_imag[0] <= 16'sd0;
+                    stage_real[1] <= 16'sd0; stage_imag[1] <= 16'sd0;
+                    stage_real[2] <= 16'sd0; stage_imag[2] <= 16'sd0;
+                    stage_real[3] <= 16'sd0; stage_imag[3] <= 16'sd0;
+                    stage_real[4] <= 16'sd0; stage_imag[4] <= 16'sd0;
+                    stage_real[5] <= 16'sd0; stage_imag[5] <= 16'sd0;
+                    stage_real[6] <= 16'sd0; stage_imag[6] <= 16'sd0;
+                    stage_real[7] <= 16'sd0; stage_imag[7] <= 16'sd0;
+
+                    done  <= 1'b1;
+                    busy  <= 1'b0;
                     state <= IDLE;
                 end
-                
-                default: state <= IDLE;
+
+                // [DP3-CM-F] Illegal FSM state: return to IDLE and clear busy.
+                // Previously: state <= IDLE (did not clear busy — caused deadlock).
+                default: begin
+                    state     <= IDLE;
+                    busy      <= 1'b0;
+                    done      <= 1'b0;
+                    bfly_cnt  <= 4'd0;
+                    fsm_error <= 1'b1;
+                end
             endcase
         end
     end
@@ -413,13 +473,17 @@ endmodule
 //   prod_im = b_re*w_im + b_im*w_re
 //   Also registers a_re, a_im for alignment
 //
-// Stage 2 (combinational): Final add/subtract
-//   out_a = a + prod
-//   out_b = a - prod
+// Stage 2 (combinational): Final add/subtract with saturation
+//   out_a = a + prod  (saturated to Q1.15 range)
+//   out_b = a - prod  (saturated to Q1.15 range)
 //
 // Trivial twiddle optimization:
 //   When trivial_w=1 (W0=1+j0), bypasses multiplication entirely:
 //   prod = b (no multiply needed)
+//
+// DP3-CM-E: Stage 2 uses 17-bit sign-extended arithmetic with overflow
+//   detection and saturation clamping. Eliminates silent wrap-around on
+//   large-amplitude Q1.15 inputs.
 // ============================================================================
 module butterfly_pipelined (
     input  wire        clk,
@@ -437,23 +501,23 @@ module butterfly_pipelined (
     // ========================================================================
     // Pipeline Stage 1: Multiplication (registered)
     // ========================================================================
-    
+
     // Complex multiplication: b * w = (b_re*w_re - b_im*w_im) + j*(b_re*w_im + b_im*w_re)
     wire signed [31:0] bw_re_full = (b_re * w_re) - (b_im * w_im);
     wire signed [31:0] bw_im_full = (b_re * w_im) + (b_im * w_re);
-    
+
     // Scale down by 15 bits (Q1.15 format) with rounding
     wire signed [15:0] bw_re_scaled = (bw_re_full + 16384) >>> 15;
     wire signed [15:0] bw_im_scaled = (bw_im_full + 16384) >>> 15;
-    
+
     // [DP2] Trivial twiddle bypass: when W=W0=(1,0), b*W = b
     wire signed [15:0] bw_re_muxed = trivial_w ? b_re : bw_re_scaled;
     wire signed [15:0] bw_im_muxed = trivial_w ? b_im : bw_im_scaled;
-    
+
     // Pipeline registers
     reg signed [15:0] pipe_a_re, pipe_a_im;     // Delayed A for alignment
     reg signed [15:0] pipe_bw_re, pipe_bw_im;   // b*w product
-    
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pipe_a_re  <= 16'sd0;
@@ -469,13 +533,26 @@ module butterfly_pipelined (
             valid_out  <= valid_in;
         end
     end
-    
+
     // ========================================================================
-    // Pipeline Stage 2: Addition/Subtraction (combinational)
+    // Pipeline Stage 2: Addition/Subtraction with saturation (combinational)
+    // [DP3-CM-E] 17-bit sign-extended arithmetic detects and clamps overflow.
+    // Overflow condition: extended sign bit (bit 16) differs from result MSB (bit 15).
+    // Positive overflow → clamp to 16'sh7FFF; negative overflow → clamp to 16'sh8000.
     // ========================================================================
-    assign out_a_re = pipe_a_re + pipe_bw_re;
-    assign out_a_im = pipe_a_im + pipe_bw_im;
-    assign out_b_re = pipe_a_re - pipe_bw_re;
-    assign out_b_im = pipe_a_im - pipe_bw_im;
+    wire signed [16:0] wide_a_re = {pipe_a_re[15], pipe_a_re} + {pipe_bw_re[15], pipe_bw_re};
+    wire signed [16:0] wide_a_im = {pipe_a_im[15], pipe_a_im} + {pipe_bw_im[15], pipe_bw_im};
+    wire signed [16:0] wide_b_re = {pipe_a_re[15], pipe_a_re} - {pipe_bw_re[15], pipe_bw_re};
+    wire signed [16:0] wide_b_im = {pipe_a_im[15], pipe_a_im} - {pipe_bw_im[15], pipe_bw_im};
+
+    wire ovf_a_re = wide_a_re[16] ^ wide_a_re[15];
+    wire ovf_a_im = wide_a_im[16] ^ wide_a_im[15];
+    wire ovf_b_re = wide_b_re[16] ^ wide_b_re[15];
+    wire ovf_b_im = wide_b_im[16] ^ wide_b_im[15];
+
+    assign out_a_re = ovf_a_re ? (wide_a_re[16] ? 16'sh8000 : 16'sh7FFF) : wide_a_re[15:0];
+    assign out_a_im = ovf_a_im ? (wide_a_im[16] ? 16'sh8000 : 16'sh7FFF) : wide_a_im[15:0];
+    assign out_b_re = ovf_b_re ? (wide_b_re[16] ? 16'sh8000 : 16'sh7FFF) : wide_b_re[15:0];
+    assign out_b_im = ovf_b_im ? (wide_b_im[16] ? 16'sh8000 : 16'sh7FFF) : wide_b_im[15:0];
 
 endmodule

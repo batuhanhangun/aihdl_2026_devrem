@@ -1,7 +1,7 @@
 // ============================================================================
 // TinyQV FFT Peripheral - 8-Point FFT Accelerator
-// AI-HDL 2026 Competition - Design Phase 2
-// 
+// AI-HDL 2026 Competition - Design Phase 2 / Design Phase 3
+//
 // This module wraps the 8-point FFT core with a memory-mapped register
 // interface compatible with TinyQV peripherals.
 //
@@ -9,13 +9,21 @@
 //   - Clock gating on input registers (gated when FFT busy)
 //   - Improved write gating for power reduction
 //
-// Register Map (32-bit aligned):
-// 0x00-0x1C: INPUT_REAL[0-7]  - Real part of input samples (write)
-// 0x20-0x3C: INPUT_IMAG[0-7]  - Imaginary part of input samples (write)
-// 0x40:      CONTROL          - Write 0x01 to start FFT
-// 0x44:      STATUS           - Bit 0: busy, Bit 1: done (read)
-// 0x48-0x64: OUTPUT_REAL[0-7] - Real part of FFT output (read)
-// 0x68-0x84: OUTPUT_IMAG[0-7] - Imaginary part of FFT output (read)
+// DP3 Security Hardening:
+//   - CM-B: Input registers zeroized on FFT completion (prevents input leakage)
+//   - CM-C: CONTROL[1] interrupt-clear bit (decouples ACK from restart)
+//   - CM-A: CONTROL[2] SPI LOCK, one-time-writable (disables SPI test path)
+//   - CM-D: CONTROL[3] write_error clear; STATUS[2] write_error sticky flag
+//   - CM-H: Input register read-back removed (enforces write-only semantics)
+//   - CM-I: Output pins masked in production/locked mode
+//
+// Register Map (32-bit aligned, word addresses):
+// 0x00-0x1C: INPUT_REAL[0-7]  - Real part of input samples (write-only)
+// 0x20-0x3C: INPUT_IMAG[0-7]  - Imaginary part of input samples (write-only)
+// 0x40:      CONTROL          - [0]=start_fft [1]=int_clear [2]=spi_lock [3]=err_clear
+// 0x44:      STATUS           - [0]=busy [1]=done [2]=write_error (read-only)
+// 0x48-0x64: OUTPUT_REAL[0-7] - Real part of FFT output (read-only)
+// 0x68-0x84: OUTPUT_IMAG[0-7] - Imaginary part of FFT output (read-only)
 // ============================================================================
 
 module tqvp_fft8 (
@@ -45,7 +53,10 @@ module tqvp_fft8 (
     output reg  [31:0] data_out,
     output wire        data_ready,
 
-    output wire        user_interrupt
+    output wire        user_interrupt,
+
+    // [DP3-CM-A] SPI lock status — fed to tt_wrapper to gate the SPI test path
+    output wire        spi_lock
 );
 
     // ========================================================================
@@ -63,21 +74,28 @@ module tqvp_fft8 (
     // ========================================================================
     reg signed [15:0] in_real [0:7];
     reg signed [15:0] in_imag [0:7];
-    
+
     // ========================================================================
     // Control/Status
     // ========================================================================
     reg        fft_start;
     wire       fft_busy;
     wire       fft_done;
-    reg        done_flag;  // Latched done status
-    
+    reg        done_flag;    // Latched done status (STATUS[1])
+
+    // [DP3-CM-A] SPI lock: one-time-writable, cleared only by rst_n
+    reg        spi_lock_reg;
+    assign     spi_lock = spi_lock_reg;
+
+    // [DP3-CM-D] Write-error sticky flag (STATUS[2])
+    reg        write_error;
+
     // ========================================================================
     // Output Registers (from FFT core)
     // ========================================================================
     wire signed [15:0] out_real [0:7];
     wire signed [15:0] out_imag [0:7];
-    
+
     // ========================================================================
     // FFT Core Instance
     // ========================================================================
@@ -87,7 +105,7 @@ module tqvp_fft8 (
         .start(fft_start),
         .busy(fft_busy),
         .done(fft_done),
-        
+
         // Inputs
         .in_real_0(in_real[0]), .in_real_1(in_real[1]),
         .in_real_2(in_real[2]), .in_real_3(in_real[3]),
@@ -97,7 +115,7 @@ module tqvp_fft8 (
         .in_imag_2(in_imag[2]), .in_imag_3(in_imag[3]),
         .in_imag_4(in_imag[4]), .in_imag_5(in_imag[5]),
         .in_imag_6(in_imag[6]), .in_imag_7(in_imag[7]),
-        
+
         // Outputs
         .out_real_0(out_real[0]), .out_real_1(out_real[1]),
         .out_real_2(out_real[2]), .out_real_3(out_real[3]),
@@ -108,34 +126,42 @@ module tqvp_fft8 (
         .out_imag_4(out_imag[4]), .out_imag_5(out_imag[5]),
         .out_imag_6(out_imag[6]), .out_imag_7(out_imag[7])
     );
-    
+
     // ========================================================================
     // Write Logic
     // ========================================================================
     wire write_active = (data_write_n != 2'b11);
     wire [5:0] word_addr = address[5:0];  // Word-aligned address
-    
+
     // [DP2] Clock gating: only allow input register writes when FFT is NOT busy
     wire input_reg_wr_en = write_active & ~fft_busy;
-    
+
     integer i;
-    
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            fft_start <= 1'b0;
-            done_flag <= 1'b0;
+            fft_start    <= 1'b0;
+            done_flag    <= 1'b0;
+            spi_lock_reg <= 1'b0;   // [DP3-CM-A] lock clears on reset only
+            write_error  <= 1'b0;   // [DP3-CM-D] error flag clears on reset
             for (i = 0; i < 8; i = i + 1) begin
                 in_real[i] <= 16'd0;
                 in_imag[i] <= 16'd0;
             end
         end else begin
             fft_start <= 1'b0;  // Default: start is a pulse
-            
+
             // Latch done flag when FFT completes
+            // [DP3-CM-B] Also zeroize input registers — samples are already
+            // latched into FFT stage registers, so this does not affect results
             if (fft_done) begin
                 done_flag <= 1'b1;
+                for (i = 0; i < 8; i = i + 1) begin
+                    in_real[i] <= 16'd0;
+                    in_imag[i] <= 16'd0;
+                end
             end
-            
+
             if (write_active) begin
                 // [DP2] Input registers gated by input_reg_wr_en (blocked when FFT busy)
                 if (input_reg_wr_en) begin
@@ -143,78 +169,123 @@ module tqvp_fft8 (
                     if (word_addr >= ADDR_IN_REAL_BASE && word_addr < ADDR_IN_REAL_BASE + 8) begin
                         in_real[word_addr - ADDR_IN_REAL_BASE] <= data_in[15:0];
                     end
-                    
+
                     // Input Imag registers (addresses 0x08-0x0F word)
                     else if (word_addr >= ADDR_IN_IMAG_BASE && word_addr < ADDR_IN_IMAG_BASE + 8) begin
                         in_imag[word_addr - ADDR_IN_IMAG_BASE] <= data_in[15:0];
                     end
                 end
-                
-                // Control register (always writable)
+
+                // ----------------------------------------------------------------
+                // Control register decode
+                // [DP3-CM-C] CONTROL[1]: clear interrupt without starting FFT
+                // [DP3-CM-A] CONTROL[2]: set SPI lock (one-time-writable, set-only)
+                // [DP3-CM-D] CONTROL[3]: clear write_error flag
+                // ----------------------------------------------------------------
                 if (word_addr == ADDR_CONTROL) begin
-                    if (data_in[0] && !fft_busy) begin
-                        fft_start <= 1'b1;
-                        done_flag <= 1'b0;  // Clear done flag on new start
+                    // CONTROL[3]: clear write_error (processed before set logic below,
+                    // so a simultaneous write error still wins — safer for diagnostics)
+                    if (data_in[3]) write_error <= 1'b0;
+
+                    // CONTROL[2]: set SPI lock (set-only; cannot be cleared by write)
+                    if (data_in[2]) spi_lock_reg <= 1'b1;
+
+                    // CONTROL[1]: clear done_flag/interrupt without starting computation
+                    if (data_in[1]) done_flag <= 1'b0;
+
+                    // CONTROL[0]: start FFT (guarded: ignored and flagged if busy)
+                    if (data_in[0]) begin
+                        if (!fft_busy) begin
+                            fft_start <= 1'b1;
+                            done_flag <= 1'b0;
+                        end else begin
+                            // [DP3-CM-D] Flag rejected start attempt
+                            write_error <= 1'b1;
+                        end
                     end
+                end
+
+                // ----------------------------------------------------------------
+                // [DP3-CM-D] Write-error detection: flag any rejected write
+                // These assignments appear AFTER CONTROL[3] clear so that a
+                // simultaneously-detected error overrides the clear (last NBA wins).
+                // ----------------------------------------------------------------
+
+                // Case 1: Input write attempted while FFT busy (silently blocked)
+                if (fft_busy &&
+                    ((word_addr >= ADDR_IN_REAL_BASE && word_addr < ADDR_IN_REAL_BASE + 8) ||
+                     (word_addr >= ADDR_IN_IMAG_BASE && word_addr < ADDR_IN_IMAG_BASE + 8))) begin
+                    write_error <= 1'b1;
+                end
+
+                // Case 2: Write to read-only addresses (STATUS, OUTPUT_REAL, OUTPUT_IMAG)
+                // Note: OUTPUT registers are physically read-only (wire types connected to
+                // FFT core outputs). Writes fall through silently; we flag them here.
+                if ((word_addr == ADDR_STATUS) ||
+                    (word_addr >= ADDR_OUT_REAL_BASE && word_addr < ADDR_OUT_REAL_BASE + 8) ||
+                    (word_addr >= ADDR_OUT_IMAG_BASE && word_addr < ADDR_OUT_IMAG_BASE + 8)) begin
+                    write_error <= 1'b1;
+                end
+
+                // Case 3: Write to unmapped address (above OUTPUT_IMAG range)
+                if (word_addr >= ADDR_OUT_IMAG_BASE + 8) begin
+                    write_error <= 1'b1;
                 end
             end
         end
     end
-    
+
     // ========================================================================
     // Read Logic
     // ========================================================================
     wire read_active = (data_read_n != 2'b11);
-    
+
     always @(*) begin
         data_out = 32'd0;
-        
+
         if (read_active) begin
-            // Input Real registers (for verification)
-            if (word_addr >= ADDR_IN_REAL_BASE && word_addr < ADDR_IN_REAL_BASE + 8) begin
-                data_out = {{16{in_real[word_addr - ADDR_IN_REAL_BASE][15]}}, 
-                            in_real[word_addr - ADDR_IN_REAL_BASE]};
+            // [DP3-CM-H] INPUT_REAL and INPUT_IMAG read-back paths REMOVED.
+            // These registers are write-only; reads return 32'h0 (the default above).
+            // Firmware must maintain software shadow copies for verification.
+
+            // Status register: [2]=write_error [1]=done_flag [0]=fft_busy
+            // [DP3-CM-D] STATUS[2] added (write_error)
+            if (word_addr == ADDR_STATUS) begin
+                data_out = {29'd0, write_error, done_flag, fft_busy};
             end
-            
-            // Input Imag registers (for verification)
-            else if (word_addr >= ADDR_IN_IMAG_BASE && word_addr < ADDR_IN_IMAG_BASE + 8) begin
-                data_out = {{16{in_imag[word_addr - ADDR_IN_IMAG_BASE][15]}}, 
-                            in_imag[word_addr - ADDR_IN_IMAG_BASE]};
-            end
-            
-            // Status register
-            else if (word_addr == ADDR_STATUS) begin
-                data_out = {30'd0, done_flag, fft_busy};
-            end
-            
-            // Output Real registers
+
+            // Output Real registers (read-only from bus; written internally by FFT core)
             else if (word_addr >= ADDR_OUT_REAL_BASE && word_addr < ADDR_OUT_REAL_BASE + 8) begin
-                data_out = {{16{out_real[word_addr - ADDR_OUT_REAL_BASE][15]}}, 
+                data_out = {{16{out_real[word_addr - ADDR_OUT_REAL_BASE][15]}},
                             out_real[word_addr - ADDR_OUT_REAL_BASE]};
             end
-            
+
             // Output Imag registers
             else if (word_addr >= ADDR_OUT_IMAG_BASE && word_addr < ADDR_OUT_IMAG_BASE + 8) begin
-                data_out = {{16{out_imag[word_addr - ADDR_OUT_IMAG_BASE][15]}}, 
+                data_out = {{16{out_imag[word_addr - ADDR_OUT_IMAG_BASE][15]}},
                             out_imag[word_addr - ADDR_OUT_IMAG_BASE]};
             end
+
+            // All other addresses (INPUT ranges, CONTROL, unmapped) return 32'h0
         end
     end
-    
+
     // ========================================================================
     // Data ready is always immediate (combinational read)
     // ========================================================================
     assign data_ready = 1'b1;
-    
+
     // ========================================================================
     // Interrupt when FFT is done
     // ========================================================================
     assign user_interrupt = done_flag;
-    
+
     // ========================================================================
-    // IO pins (directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly not used in this peripheral)
+    // IO pins (directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly directly not used in this peripheral)
     // Could be used for status LEDs or debug
+    // [DP3-CM-I] FSM state masked in production (locked) mode to prevent
+    // timing side-channel observation via physical output pins.
     // ========================================================================
-    assign uo_out = {6'b0, done_flag, fft_busy};
+    assign uo_out = spi_lock_reg ? 8'd0 : {6'b0, done_flag, fft_busy};
 
 endmodule
