@@ -1,4 +1,4 @@
-# LLM Prompt Log - AI-HDL 2026 Design Phase 1
+# LLM Prompt Log - AI-HDL 2026 Design Phases 1 / 2 / 3
 
 **Project:** 8-Point FFT Accelerator Peripheral  
 **Team:** Devrem  
@@ -223,3 +223,202 @@ Test 5: Two-Cycle Cosine Wave        - PASS
 ---
 
 *This prompt log was generated as part of the AI-HDL 2026 competition requirements to document the AI-assisted design methodology.*
+
+---
+
+## Design Phase 3 — Security Hardening
+
+*Date: 2026-03-25 | LLM: Claude Sonnet 4.6*
+
+---
+
+## Prompt DP3-1: Attack Surface Mapping
+
+**Prompt:**
+```
+Read the DP3 brief. Map the attack surface of the current peripheral (fft_8point.v,
+peripheral.v, tt_wrapper.v). Produce docs/ATTACK_SURFACE_MAP.md.
+```
+
+**Generated:** `docs/ATTACK_SURFACE_MAP.md` — 4 trust boundaries, 12 entry points, data flow table.
+
+---
+
+## Prompt DP3-2: CIA Analysis
+
+**Prompt:**
+```
+Perform CIA analysis on the attack surface. Produce docs/CIA_ANALYSIS.md.
+```
+
+**Generated:** `docs/CIA_ANALYSIS.md` — 4 assets × 3 CIA dimensions, per-asset threat summary.
+
+---
+
+## Prompt DP3-3: STRIDE Analysis
+
+**Prompt:**
+```
+Perform STRIDE threat analysis. Cross-reference all 6 STRIDE categories against the
+attack surface. Produce docs/STRIDE_ANALYSIS.md.
+```
+
+**Generated:** `docs/STRIDE_ANALYSIS.md` — 18 threats catalogued with root cause and RTL evidence.
+
+---
+
+## Prompt DP3-4: DREAD Scoring
+
+**Prompt:**
+```
+Score all STRIDE threats using DREAD methodology. Rank by severity.
+Produce docs/DREAD_SCORES.md.
+```
+
+**Generated:** `docs/DREAD_SCORES.md` — 18 threats ranked; 8 CRITICAL, 9 HIGH, 1 MEDIUM.
+
+---
+
+## Prompt DP3-5: CWE Mapping
+
+**Prompt:**
+```
+Map the identified threats to hardware-relevant CWEs (CWE-1234, CWE-1262, CWE-1271,
+CWE-1272, CWE-1351, CWE-1231, CWE-276, CWE-390, CWE-682).
+Produce docs/CWE_FINDINGS.md.
+```
+
+**Generated:** `docs/CWE_FINDINGS.md` — 9 CWE evaluations with YES/PARTIAL/NO verdicts and RTL evidence.
+
+---
+
+## Prompt DP3-6: Mitigation Plan
+
+**Prompt:**
+```
+Design countermeasures for all CRITICAL and HIGH threats. Specify CM-A through CM-I
+with exact RTL change specifications. Produce docs/MITIGATION_PLAN.md.
+```
+
+**Generated:** `docs/MITIGATION_PLAN.md` — 9 countermeasures with Verilog code specifications.
+
+---
+
+## Prompt DP3-7: Peripheral Hardening (peripheral.v)
+
+**Prompt:**
+```
+Implement CM-A (SPI lock register), CM-B (input zeroization), CM-C (interrupt-clear bit),
+CM-D (write_error flag), CM-H (input read-back removed), CM-I (uo_out masked) in
+src/peripheral.v.
+```
+
+**Modified:** `src/peripheral.v` — all 6 countermeasures implemented. Register map extended
+to CONTROL[3:0] and STATUS[2:0].
+
+---
+
+## Prompt DP3-8: FFT Core Hardening (fft_8point.v)
+
+**Prompt:**
+```
+Implement CM-G (stage register reset init), CM-F (FSM hardening + fsm_error port),
+CM-E (butterfly overflow saturation), CM-B (stage register zeroization in DONE state)
+in src/fft_8point.v.
+```
+
+**Modified:** `src/fft_8point.v` — full rewrite of reset block, DONE state, butterfly Stage 2;
+added `fsm_error` output port.
+
+---
+
+## Prompt DP3-9: Wrapper Hardening (tt_wrapper.v)
+
+**Prompt:**
+```
+Implement CM-A SPI lock gating in src/tt_wrapper.v. Wire spi_lock from peripheral
+to gate data_write_n, data_read_n, and data_out_masked.
+```
+
+**Modified:** `src/tt_wrapper.v` — `spi_lock` wire declared, instantiation extended,
+`always @(*)` block replaced with lock-gated version.
+
+**Bug fixed (colleague report):** `reg [7:0] ui_in_sync` → `wire [7:0] ui_in_sync`
+(iverilog rejected continuous assignment driving a reg — committed separately).
+
+---
+
+## Prompt DP3-10: Security Testbench
+
+**Prompt:**
+```
+Create src/security_tb.v with 9 test scenarios covering all 9 countermeasures.
+Must compile with: iverilog -o sec_test fft_8point.v peripheral.v tt_wrapper.v security_tb.v
+```
+
+**Generated:** `src/security_tb.v` — 9 scenarios, 11 checks. Includes synchronizer and
+spi_reg stubs for standalone compilation. All 11 checks PASSED on first WSL run.
+
+---
+
+## Prompt DP3-11: Regression Results
+
+**Prompt:**
+```
+Analyze WSL simulation results (11/11 PASS, functional 3/3 PASS, Yosys 0 errors).
+Produce docs/REGRESSION_RESULTS.md and docs/SECURITY_VALIDATION_RESULTS.md.
+```
+
+**Generated:** `docs/REGRESSION_RESULTS.md`, `docs/SECURITY_VALIDATION_RESULTS.md`
+
+---
+
+## Prompt DP3-12: PPA Impact Analysis
+
+**Prompt:**
+```
+Read synthesis_report.txt (DP1) and synthesis_report_dp2.txt (DP2). Compare with
+DP3 Yosys results (11,396 cells, 925 FFs). Produce docs/PPA_IMPACT_ANALYSIS.md.
+```
+
+**Generated:** `docs/PPA_IMPACT_ANALYSIS.md` — DP1/DP2/DP3 cell count and FF comparison,
+per-countermeasure overhead breakdown.
+
+---
+
+## Prompt DP3-13: Final Security Report
+
+**Prompt:**
+```
+Synthesize all DP3 docs into a single final submission document.
+Produce docs/DP3_SECURITY_REPORT.md.
+```
+
+**Generated:** `docs/DP3_SECURITY_REPORT.md` — executive summary, threat model, countermeasures,
+validation results, PPA impact, residual risks, document index.
+
+---
+
+## Prompt DP3-14: README + Log + Commit
+
+**Prompt:**
+```
+Update README.md to DP3, append DP3 section to LLM_PROMPT_LOG.md, commit all DP3 docs.
+```
+
+**Modified:** `README.md` (phase, features, PPA table, file tree, verification, register map),
+`docs/LLM_PROMPT_LOG.md` (this section).
+
+---
+
+## DP3 Summary
+
+| Component | LLM Contribution |
+|-----------|-----------------|
+| Threat Modelling | Attack surface map, CIA, STRIDE (18 threats), DREAD scores, 9 CWE mappings |
+| Countermeasure Design | Mitigation plan specifying CM-A…CM-I with RTL code |
+| RTL Hardening | peripheral.v, fft_8point.v, tt_wrapper.v — all 9 CMs implemented |
+| Security Testbench | security_tb.v — 9 scenarios, 11 checks, 11/11 PASS |
+| Analysis Documents | REGRESSION_RESULTS, SECURITY_VALIDATION_RESULTS, PPA_IMPACT_ANALYSIS, DP3_SECURITY_REPORT |
+
+**Total DP3 LLM-generated/modified content:** ~1,800 lines RTL + ~900 lines documentation
