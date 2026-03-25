@@ -27,7 +27,7 @@ module tt_um_tqv_peripheral_harness (
   wire user_interrupt;
 
   // Peripherals get synchronized ui_in.
-  reg [7:0] ui_in_sync;
+  wire [7:0] ui_in_sync;
   synchronizer #(.STAGES(2), .WIDTH(8)) synchronizer_ui_in_inst (.clk(clk), .data_in(ui_in), .data_out(ui_in_sync));
 
   // Register reset as in TinyQV
