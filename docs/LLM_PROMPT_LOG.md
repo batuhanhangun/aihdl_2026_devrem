@@ -1,4 +1,4 @@
-# LLM Prompt Log - AI-HDL 2026 Design Phases 1 / 2 / 3
+# LLM Prompt Log - AI-HDL 2026 Design Phases 1 / 2 / 3 / 4
 
 **Project:** 8-Point FFT Accelerator Peripheral  
 **Team:** Devrem  
@@ -422,3 +422,91 @@ Update README.md to DP3, append DP3 section to LLM_PROMPT_LOG.md, commit all DP3
 | Analysis Documents | REGRESSION_RESULTS, SECURITY_VALIDATION_RESULTS, PPA_IMPACT_ANALYSIS, DP3_SECURITY_REPORT |
 
 **Total DP3 LLM-generated/modified content:** ~1,800 lines RTL + ~900 lines documentation
+
+---
+
+# Design Phase 4 (DP4) — Netlist to Chip Tapeout
+
+## Prompt DP4-1: Project State Review & DP4 Kickoff
+
+**Prompt:**
+```
+Read the design stage 3 document to remember where we left, then keep going with phase 4
+described in AI-HDL 2026 - Design Phase 4 Documentation.pdf.
+This is a github repo for the project. Keep the workflow in mind: push files to repo,
+colleague downloads, runs required tools, sends results back, then we push the final project.
+```
+
+**Actions:**
+- Reviewed DP3 (Security Evaluation) and DP4 (Netlist to Chip Tapeout) documentation
+- Explored complete project state: source files, config, docs, git history
+- Identified critical bug: `fft_8point.v` missing from `info.yaml` source_files list
+
+---
+
+## Prompt DP4-2: Fix info.yaml
+
+**Prompt:** (Automated fix based on review)
+
+**Modified:** `info.yaml`
+- Added `fft_8point.v` to source_files (was missing — would cause synthesis failure)
+- Filled in project metadata: title, author, description
+- Fixed clock_hz: 64000000 → 71500000 (matching config.json 14ns period)
+- Filled in pinout descriptions for uo_out (fft_busy, fft_done) and ui_in (unused)
+
+---
+
+## Prompt DP4-3: OpenLane Run Instructions
+
+**Prompt:** (Generated as part of DP4 preparation)
+
+**Generated:** `docs/DP4_OPENLANE_INSTRUCTIONS.md` — step-by-step guide for colleague to:
+- Set up OpenLane environment (3 options: tt tool, OpenLane standalone, AIHDL template)
+- Run the full ASIC flow
+- Collect all required output files (GDSII, STA, DRC, LVS reports)
+- Troubleshoot common issues
+
+---
+
+## Prompt DP4-4: Final Project Report (DP1-DP4)
+
+**Prompt:** (Generated as part of DP4 preparation)
+
+**Generated:** `docs/DP4_FINAL_PROJECT_REPORT.md` — comprehensive report covering:
+- Full design journey across all 4 phases
+- Architecture overview, register map, pinout
+- DP1 design decisions and baseline metrics
+- DP2 optimization techniques and PPA improvements
+- DP3 threat modeling and countermeasure summary
+- DP4 physical design flow and configuration (with TBD placeholders for OpenLane results)
+- AI-assisted methodology reflection
+- Lessons learned
+
+---
+
+## Prompt DP4-5: README & Documentation Update
+
+**Prompt:** (Generated as part of DP4 preparation)
+
+**Modified:** `README.md`
+- Updated phase to DP4
+- Added DP4 Physical Design section with OpenLane config summary
+- Updated file structure to include DP4 docs
+- Added OpenLane to tools list
+
+**Modified:** `docs/LLM_PROMPT_LOG.md` (this section)
+
+---
+
+## DP4 Summary (Pre-OpenLane)
+
+| Component | LLM Contribution |
+|-----------|-----------------|
+| Bug Fix | `fft_8point.v` missing from info.yaml source_files — would have caused OpenLane synthesis failure |
+| Configuration | Verified config.json correctness for TT OpenLane flow |
+| Instructions | DP4_OPENLANE_INSTRUCTIONS.md for colleague to run flow |
+| Final Report | DP4_FINAL_PROJECT_REPORT.md — comprehensive DP1-DP4 report with TBD placeholders |
+| Documentation | README, LLM_PROMPT_LOG updated for DP4 |
+
+**Note:** DP4 report sections 6.2-6.6 and 7.1 contain `[TBD]` placeholders that will be filled
+after the colleague runs OpenLane and returns synthesis, STA, DRC, LVS, and power reports.

@@ -4,7 +4,7 @@
 **Team Members:** <a href="https://www.linkedin.com/in/bhangun/" target="Batuhan Hangün">Batuhan Hangün</a> ,
                   <a href="https://www.linkedin.com/in/safak-sahin/" target="Şafak Şahin">Şafak Şahin</a> </br>
 **Competition:** AI-HDL 2026 Design Competition  
-**Phase:** Design Phase 3 (DP3) — Security Hardening
+**Phase:** Design Phase 4 (DP4) — Netlist to Chip Tapeout
 
 ## Project Overview
 
@@ -65,6 +65,23 @@ The 8-point FFT is computed using a 3-stage Radix-2 DIT (Decimation-in-Time) but
 
 Full analysis: `docs/PPA_IMPACT_ANALYSIS.md`
 
+## DP4: Physical Design (Tapeout)
+
+Design Phase 4 takes the DP3-hardened RTL through the full OpenLane ASIC flow:
+
+**Synthesis** -> **Floorplan** -> **Placement** -> **CTS** -> **Routing** -> **STA/DRC/LVS Sign-off** -> **GDSII**
+
+| Parameter | Value |
+|-----------|-------|
+| Technology | SkyWater 130nm (sky130) |
+| Tile Size | 1x2 Tiny Tapeout (~167x216 um) |
+| Target Clock | 71.5 MHz (14 ns period) |
+| Target Density | 70% |
+| Max Metal Layer | met4 |
+
+See `docs/DP4_OPENLANE_INSTRUCTIONS.md` for build instructions.
+See `docs/DP4_FINAL_PROJECT_REPORT.md` for the comprehensive project report (DP1-DP4).
+
 ## File Structure
 
 ```text
@@ -74,6 +91,7 @@ Full analysis: `docs/PPA_IMPACT_ANALYSIS.md`
 │   ├── fft_8point_tb.v    # Functional testbench (DP1)
 │   ├── security_tb.v      # Security regression testbench (DP3, 11 checks)
 │   ├── tt_wrapper.v       # TinyTapeout wrapper (DP3: CM-A SPI lock gate)
+│   ├── config.json        # OpenLane configuration (DP4)
 │   ├── synth.ys           # Yosys synthesis script (DP2: enhanced)
 │   └── test_harness/      # SPI test infrastructure
 ├── docs/
@@ -89,10 +107,13 @@ Full analysis: `docs/PPA_IMPACT_ANALYSIS.md`
 │   ├── SECURITY_VALIDATION_RESULTS.md# DP3 per-check security test results
 │   ├── PPA_IMPACT_ANALYSIS.md        # DP1/DP2/DP3 PPA comparison
 │   ├── DP3_SECURITY_REPORT.md        # DP3 final submission report
+│   ├── DP4_FINAL_PROJECT_REPORT.md   # DP4 comprehensive final report (DP1-DP4)
+│   ├── DP4_OPENLANE_INSTRUCTIONS.md  # OpenLane run instructions for colleague
 │   ├── LLM_PROMPT_LOG.md             # AI prompt history
 │   └── info.md                       # Quick reference
 ├── fft_block_diagram.svg  # Architecture block diagram
 ├── fft_butterfly_flow.svg # Butterfly structure diagram
+├── info.yaml              # Tiny Tapeout project metadata
 ├── synthesis_report.txt   # DP1 Yosys synthesis output
 ├── synthesis_report_dp2.txt # DP2 Yosys synthesis output
 └── README.md
@@ -142,6 +163,7 @@ yosys synth.ys 2>&1 | tee ../synthesis_report_dp3.txt
 - **HDL Generation:** Claude (Anthropic)
 - **Simulation:** Icarus Verilog
 - **Synthesis:** Yosys
+- **Physical Design:** OpenLane 2 (sky130 PDK)
 - **Waveform Viewer:** GTKWave
 
 ## Register Map
