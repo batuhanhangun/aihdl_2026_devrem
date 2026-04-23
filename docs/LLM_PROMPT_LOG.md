@@ -508,5 +508,56 @@ colleague downloads, runs required tools, sends results back, then we push the f
 | Final Report | DP4_FINAL_PROJECT_REPORT.md — comprehensive DP1-DP4 report with TBD placeholders |
 | Documentation | README, LLM_PROMPT_LOG updated for DP4 |
 
-**Note:** DP4 report sections 6.2-6.6 and 7.1 contain `[TBD]` placeholders that will be filled
-after the colleague runs OpenLane and returns synthesis, STA, DRC, LVS, and power reports.
+---
+
+## Prompt DP4-6: Tile Size Fix (1x2 → 4x2 → 6x2)
+
+**Problem:** Design area (103,292 um²) exceeded 1x2 tile core area (34,255 um²) by 3.5x.
+
+**Iteration 1:** Changed tiles to 4x2, PL_TARGET_DENSITY_PCT to 80.
+**Result:** Failed — `[DPL-0036] Detailed placement failed` after timing buffers and antenna diodes consumed remaining space.
+
+**Iteration 2:** Changed tiles to 6x2, PL_TARGET_DENSITY_PCT to 65.
+**Result:** **SUCCESS** — Full 72-step OpenLane flow completed. DRC/LVS clean, 59.8% utilization.
+
+**Key learning:** sky130 standard cells are much larger than abstract Yosys gates. Infrastructure overhead (timing repair buffers +2,469 cells, clock tree +157 cells, antenna diodes +206 cells, fill/tap cells +30,460) must be accounted for when selecting tile size.
+
+---
+
+## Prompt DP4-7: OpenLane Results Analysis & Report Finalization
+
+**Prompt:**
+```
+Colleague sent the runs folder. Analyze the OpenLane output metrics,
+fill TBD placeholders in the final report, and prepare for submission.
+```
+
+**Actions:**
+- Analyzed `metrics.json`: DRC=0, LVS=0, setup slack=+3.17ns (nom), power=6.30mW
+- Copied GDSII, LEF, render, metrics to `gds/` directory
+- Filled all TBD placeholders in `docs/DP4_FINAL_PROJECT_REPORT.md`
+- Updated `README.md` with final PPA table and sign-off results
+- Updated `docs/LLM_PROMPT_LOG.md` (this section)
+
+---
+
+## DP4 Final Summary
+
+| Component | LLM Contribution |
+|-----------|-----------------|
+| Bug Fix | `fft_8point.v` missing from info.yaml source_files |
+| Tile Sizing | 3 iterations: 1x2 (fail) → 4x2 (fail) → 6x2 (success) |
+| Configuration | config.json tuning (density, tile size) across iterations |
+| Instructions | DP4_OPENLANE_INSTRUCTIONS.md for colleague |
+| Results Analysis | Parsed 329-line metrics.json, extracted key PPA numbers |
+| Final Report | DP4_FINAL_PROJECT_REPORT.md — all TBD placeholders filled with real data |
+| Documentation | README, LLM_PROMPT_LOG updated for final submission |
+
+**Key DP4 Results:**
+- **GDSII:** `gds/tt_um_tqv_peripheral_harness.gds` (23.7 MB)
+- **DRC:** 0 errors (CLEAN)
+- **LVS:** 0 mismatches (CLEAN)
+- **Setup Slack:** +3.17 ns (nom_tt_025C_1v80)
+- **Hold Slack:** +0.31 ns (all corners clean)
+- **Power:** 6.30 mW
+- **Utilization:** 59.8% on 6x2 tile

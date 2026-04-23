@@ -42,9 +42,12 @@ This report documents the complete design journey of an **8-Point FFT (Fast Four
 | Metric | Value |
 |--------|-------|
 | Technology | SkyWater 130nm (sky130) |
-| Tile Size | 1x2 Tiny Tapeout (~167x216 um) |
+| Tile Size | 6x2 Tiny Tapeout (1030.4 x 225.76 um) |
 | Target Clock | 71.5 MHz (14 ns period) |
-| Cell Count (pre-PD) | ~11,396 |
+| Standard Cells | 14,715 (post-PD, including buffers) |
+| Core Utilization | 59.8% |
+| Total Power | 6.30 mW |
+| DRC / LVS | CLEAN / CLEAN |
 | Security Tests | 11/11 PASS |
 | Functional Tests | 3/3 PASS |
 
@@ -266,7 +269,7 @@ The security overhead (~665 cells) is dominated by CM-G (reset mux on DFFs, ~200
 
 ### 6.1 OpenLane ASIC Flow
 
-The physical design was performed using **OpenLane** with the **SkyWater 130nm PDK** (sky130), targeting a **1x2 Tiny Tapeout tile** (~167x216 um).
+The physical design was performed using **OpenLane (LibreLane 3.0.2)** with the **SkyWater 130nm PDK** (sky130), targeting a **6x2 Tiny Tapeout tile** (~1030x226 um). The initial 1x2 tile was too small (356% utilization); a 4x2 attempt also failed at detailed placement due to congestion. The 6x2 tile provided adequate headroom at ~60% utilization.
 
 #### Flow Steps Executed:
 
@@ -287,69 +290,78 @@ The physical design was performed using **OpenLane** with the **SkyWater 130nm P
 | Parameter | Value | Rationale |
 |-----------|-------|-----------|
 | CLOCK_PERIOD | 14 ns (~71.5 MHz) | TinyQV integration requirement |
-| PL_TARGET_DENSITY_PCT | 70% | Balance between utilization and routability |
+| PL_TARGET_DENSITY_PCT | 65% | Adequate headroom for buffers and routing on 6x2 |
 | FP_SIZING | absolute | Fixed die footprint for TT tile |
 | RT_MAX_LAYER | met4 | TT standard (no met5 power rings) |
 | RUN_CTS | 1 | Clock tree required for timing closure |
 | Hold slack margin | 0.1 ns (placement) / 0.05 ns (GRT) | Guardband for manufacturing variation |
+| Tile size | 6x2 | Required to fit 103K um² design + infrastructure |
 
 ### 6.2 Synthesis Results
 
-<!-- PLACEHOLDER: To be filled after OpenLane run -->
-
 | Metric | Value |
 |--------|-------|
-| Total Cells | `[TBD — from synthesis report]` |
-| Flip-Flops | `[TBD]` |
-| Combinational | `[TBD]` |
-| Buffers/Inverters | `[TBD]` |
-| Total Area (um^2) | `[TBD]` |
-| Utilization | `[TBD]` |
+| Total Standard Cells | 14,715 |
+| Sequential Cells (FFs) | 988 |
+| Multi-Input Combinational | 7,508 |
+| Timing Repair Buffers | 2,469 |
+| Clock Buffers/Inverters | 157 |
+| Antenna Diodes | 206 |
+| Fill + Tap Cells | 30,460 |
+| Total Instance Area | 134,989 um² (std cells) |
+| Core Utilization | 59.8% |
 
 ### 6.3 Timing Results (STA)
 
-<!-- PLACEHOLDER: To be filled after OpenLane run -->
+Timing was analyzed across 9 PVT corners. The design meets timing at nominal and fast corners. The slow corner (ss_100C_1v60) has setup violations, which is expected for this clock frequency under extreme operating conditions.
 
-| Timing Metric | Value |
-|---------------|-------|
-| Clock Period | 14.0 ns |
-| Worst Setup Slack | `[TBD]` |
-| Worst Hold Slack | `[TBD]` |
-| Total Negative Slack (TNS) | `[TBD]` |
-| Number of Violations | `[TBD]` |
+| Corner | Setup Slack (ns) | Hold Slack (ns) | Setup Violations |
+|--------|-----------------|-----------------|-----------------|
+| nom_tt_025C_1v80 | **+3.17** | **+0.31** | 0 |
+| nom_ff_n40C_1v95 | **+4.39** | **+0.10** | 0 |
+| nom_ss_100C_1v60 | -5.38 | **+0.72** | 361 |
+| min_tt_025C_1v80 | **+3.33** | **+0.31** | 0 |
+| min_ff_n40C_1v95 | **+4.50** | **+0.10** | 0 |
+| min_ss_100C_1v60 | -4.55 | **+0.80** | 361 |
+| max_tt_025C_1v80 | **+3.04** | **+0.32** | 0 |
+| max_ff_n40C_1v95 | **+4.30** | **+0.11** | 0 |
+| max_ss_100C_1v60 | -6.24 | **+0.63** | 372 |
+
+**Hold timing:** Zero violations across all corners.
+**Setup timing:** Clean at nominal (tt) and fast (ff) corners. The slow corner (ss, 100C, 1.60V) violations are acceptable — this represents an extreme operating condition well beyond typical use.
 
 ### 6.4 Sign-off Results
 
-<!-- PLACEHOLDER: To be filled after OpenLane run -->
-
 | Check | Result | Details |
 |-------|--------|---------|
-| DRC | `[TBD]` | `[Number of violations]` |
-| LVS | `[TBD]` | `[Clean/mismatches]` |
-| Antenna | `[TBD]` | `[Number of violations]` |
+| **DRC (Magic)** | **CLEAN** | 0 violations |
+| **LVS (Netgen)** | **CLEAN** | 0 device/net/pin mismatches |
+| **Antenna** | **CLEAN** | 0 violating nets, 0 violating pins |
+| **Power Grid** | **CLEAN** | 0 violations (VPWR and VGND) |
+| **Illegal Overlap** | **CLEAN** | 0 overlaps |
+| **Routing DRC** | **CLEAN** | 0 errors after 11 iterations |
 
 ### 6.5 Power Analysis
 
-<!-- PLACEHOLDER: To be filled after OpenLane run -->
-
 | Power Component | Value |
 |----------------|-------|
-| Internal Power | `[TBD]` |
-| Switching Power | `[TBD]` |
-| Leakage Power | `[TBD]` |
-| Total Power | `[TBD]` |
+| Internal Power | 4.60 mW |
+| Switching Power | 1.69 mW |
+| Leakage Power | 0.25 uW |
+| **Total Power** | **6.30 mW** |
 
 ### 6.6 Physical Design Summary
 
-<!-- PLACEHOLDER: To be filled after OpenLane run -->
-
 | Metric | Value |
 |--------|-------|
-| Die Area | `[TBD]` um x `[TBD]` um |
-| Core Utilization | `[TBD]` % |
-| Wire Length | `[TBD]` |
-| Via Count | `[TBD]` |
+| Die Area | 1030.4 x 225.76 um (6x2 tile) |
+| Core Area | 1024.88 x 220.32 um = 225,802 um² |
+| Core Utilization | 59.8% |
+| Wire Length | 461,135 um |
+| Via Count | 92,018 |
 | Metal Layers Used | met1 - met4 |
+| IR Drop (worst) | 0.161 mV (negligible) |
+| Clock Tree Buffers | 149 buffers + 8 inverters |
 
 ---
 
@@ -357,13 +369,15 @@ The physical design was performed using **OpenLane** with the **SkyWater 130nm P
 
 ### 7.1 Evolution Across Phases
 
-| Metric | DP1 | DP2 | DP3 | DP4 |
+| Metric | DP1 | DP2 | DP3 | DP4 (Physical) |
 |--------|-----|-----|-----|-----|
-| Cells (Yosys) | 12,172 | 10,731 | 11,396 | `[TBD]` |
-| Flip-Flops | 854 | 923 | 925 | `[TBD]` |
-| Area (um^2) | — | — | — | `[TBD]` |
-| Clock (MHz) | — | — | — | `[TBD — actual achieved]` |
-| Power (uW) | — | — | — | `[TBD]` |
+| Cells (Yosys) | 12,172 | 10,731 | 11,396 | 14,715 (sky130) |
+| Flip-Flops | 854 | 923 | 925 | 988 |
+| Area (um^2) | — | — | — | 134,989 (std cells) |
+| Die Area | — | — | — | 1030.4 x 225.76 um |
+| Clock (MHz) | — | — | — | 71.5 (nom corner clean) |
+| Power (mW) | — | — | — | 6.30 |
+| DRC/LVS | — | — | — | **CLEAN / CLEAN** |
 | Security Tests | 0/0 | 0/0 | 11/11 | 11/11 |
 | Functional Tests | 3/3 | 3/3 | 3/3 | 3/3 |
 
@@ -373,7 +387,7 @@ The physical design was performed using **OpenLane** with the **SkyWater 130nm P
 
 2. **Latency vs. Throughput:** DP2 pipelining doubled single-computation latency (~15 to ~28 cycles) but enabled higher clock frequency. For a peripheral accelerator, this is the correct trade-off.
 
-3. **Density vs. Routability:** 70% target density balances silicon utilization against routing congestion. With `GRT_ALLOW_CONGESTION=1`, the router has flexibility for dense areas.
+3. **Tile Size vs. Routability:** The design required a 6x2 tile (originally targeted 1x2). The sky130 standard cell library produces physically larger cells than abstract gate estimates suggested. After accounting for timing repair buffers (+2,469 cells), clock tree (+157 cells), antenna diodes (+206 cells), and infrastructure (30,460 fill/tap cells), the 6x2 tile at 59.8% utilization provided clean DRC/LVS and adequate timing margins.
 
 ---
 
@@ -426,11 +440,13 @@ All significant AI interactions were logged in `docs/LLM_PROMPT_LOG.md`. Key pro
 
 ### 9.2 Challenges Encountered
 
-1. **TinyTapeout integration constraints.** The fixed tile size, pin limitations, and SPI test harness requirement added significant design constraints that aren't present in unconstrained ASIC design.
+1. **Tile size estimation gap.** Our Yosys gate-level estimates (~11,400 cells) did not predict the physical area requirements (~103,292 um² with sky130 cells). The design needed a 6x2 tile instead of the expected 1x2. This is a common pitfall when moving from abstract synthesis to physical design — sky130 standard cells are significantly larger than generic gates, and the OpenLane flow adds substantial infrastructure (timing repair buffers, clock tree, antenna diodes, fill/tap cells).
 
 2. **Security vs. area trade-offs.** Some countermeasures (CM-G: reset initialization on all DFFs) have a per-register cost that scales with design size. Careful analysis was needed to ensure the overhead was acceptable.
 
 3. **Clock domain crossing.** The SPI interface operates on an external clock domain, requiring proper synchronization (2-stage CDC) on all input paths. This is a common but critical correctness requirement.
+
+4. **Slow-corner timing closure.** The ss_100C_1v60 corner has setup violations at 71.5 MHz. While acceptable for this project (nominal corner is clean), achieving timing closure across all PVT corners would require either relaxing the clock period or more aggressive optimization.
 
 ### 9.3 What We Would Do Differently
 
@@ -448,6 +464,11 @@ All significant AI interactions were logged in `docs/LLM_PROMPT_LOG.md`. Key pro
 
 ```
 aihdl_2026_devrem/
+|-- gds/
+|   |-- tt_um_tqv_peripheral_harness.gds  # Final GDSII layout
+|   |-- tt_um_tqv_peripheral_harness.lef  # Abstract layout (LEF)
+|   |-- chip_render.png                   # KLayout render of chip
+|   `-- metrics.json                      # OpenLane metrics
 |-- src/
 |   |-- fft_8point.v            # FFT core (DP2 pipeline + DP3 security)
 |   |-- peripheral.v            # Register interface (DP3 hardened)

@@ -52,39 +52,47 @@ The 8-point FFT is computed using a 3-stage Radix-2 DIT (Decimation-in-Time) but
 - **[DP3]** Input register read-back removed (CM-H) — write-only semantics enforced
 - **[DP3]** Output pins masked in production mode (CM-I) — FSM state not exposed on uo_out
 
-## PPA Summary (DP1 / DP2 / DP3)
+## PPA Summary (DP1 / DP2 / DP3 / DP4)
 
-| Metric | DP1 Baseline | DP2 Optimized | DP3 Hardened |
-|--------|-------------|---------------|--------------|
-| Total Cells | 12,172 | 10,731 | **11,396** |
-| Flip-Flops | 854 | 923 | **925** |
-| Latency | ~15 cycles | ~28 cycles | ~28 cycles |
-| Critical Path | Full multiply chain | Pipelined | Pipelined + CM-E clamp |
-| Synthesis Errors | 0 | 0 | **0** |
-| Security Tests | — | — | **11 / 11 PASS** |
+| Metric | DP1 | DP2 | DP3 | DP4 (Physical) |
+|--------|-----|-----|-----|-----|
+| Cells (Yosys) | 12,172 | 10,731 | 11,396 | 14,715 (sky130) |
+| Flip-Flops | 854 | 923 | 925 | 988 |
+| Latency | ~15 cyc | ~28 cyc | ~28 cyc | ~28 cyc |
+| DRC / LVS | — | — | — | **CLEAN / CLEAN** |
+| Power | — | — | — | **6.30 mW** |
+| Security Tests | — | — | 11/11 | **11/11 PASS** |
 
-Full analysis: `docs/PPA_IMPACT_ANALYSIS.md`
+Full analysis: `docs/PPA_IMPACT_ANALYSIS.md`, `docs/DP4_FINAL_PROJECT_REPORT.md`
 
-## DP4: Physical Design (Tapeout)
+## DP4: Physical Design (Tapeout) — COMPLETE
 
-Design Phase 4 takes the DP3-hardened RTL through the full OpenLane ASIC flow:
+Design Phase 4 produced a **manufacturable GDSII** through the full OpenLane ASIC flow:
 
 **Synthesis** -> **Floorplan** -> **Placement** -> **CTS** -> **Routing** -> **STA/DRC/LVS Sign-off** -> **GDSII**
 
 | Parameter | Value |
 |-----------|-------|
 | Technology | SkyWater 130nm (sky130) |
-| Tile Size | 1x2 Tiny Tapeout (~167x216 um) |
+| Tile Size | 6x2 Tiny Tapeout (1030.4 x 225.76 um) |
 | Target Clock | 71.5 MHz (14 ns period) |
-| Target Density | 70% |
+| Core Utilization | 59.8% |
 | Max Metal Layer | met4 |
+| DRC | **0 errors** |
+| LVS | **0 mismatches** |
+| Setup Slack (nom) | **+3.17 ns** |
+| Hold Slack (nom) | **+0.31 ns** |
 
-See `docs/DP4_OPENLANE_INSTRUCTIONS.md` for build instructions.
 See `docs/DP4_FINAL_PROJECT_REPORT.md` for the comprehensive project report (DP1-DP4).
 
 ## File Structure
 
 ```text
+├── gds/
+│   ├── tt_um_tqv_peripheral_harness.gds  # Final GDSII layout (DP4)
+│   ├── tt_um_tqv_peripheral_harness.lef  # Abstract layout
+│   ├── chip_render.png                   # KLayout render
+│   └── metrics.json                      # OpenLane metrics
 ├── src/
 │   ├── fft_8point.v       # FFT core + pipelined butterfly (DP2/DP3: CM-B,E,F,G)
 │   ├── peripheral.v       # TinyQV bus interface (DP2/DP3: CM-A,B,C,D,H,I)

@@ -30,6 +30,9 @@ openlane/
 *.gds
 *.mag
 *.spice
+# Keep final tapeout deliverables
+!gds/*.gds
+!gds/*.lef
 
 # === Windows/macOS System Files ===
 *_Zone.Identifier      # Windows download markers
@@ -64,6 +67,7 @@ __pycache__/
 
 # === Large Binary Files ===
 *.pdf                  # PDFs (reference docs should be linked, not committed)
+!AI-HDL*.pdf           # Keep competition phase documentation
 *.zip
 *.tar.gz
 *.rar
