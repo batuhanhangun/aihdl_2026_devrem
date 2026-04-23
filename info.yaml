@@ -8,7 +8,7 @@ project:
   clock_hz:     71500000  # Clock frequency in Hz (~71.5MHz, 14ns period per config.json)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "4x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Do not change the top module here.  Instead change tt_wrapper.v line 38 to refer to your module.
   top_module:  "tt_um_tqv_peripheral_harness"

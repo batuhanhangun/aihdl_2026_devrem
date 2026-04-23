@@ -12,7 +12,7 @@
   "//": "Here are some of the variables you may want to change:",
 
   "//": "PL_TARGET_DENSITY_PCT - TinyQV synthesizes at this density so this should not be changed.",
-  "PL_TARGET_DENSITY_PCT": 70,
+  "PL_TARGET_DENSITY_PCT": 80,
 
   "//": "CLOCK_PERIOD - For integration with TinyQV the design must synthesize at 70MHz.",
   "//": "The value is in nanoseconds, so 14ns ~= 71.5MHz.",
